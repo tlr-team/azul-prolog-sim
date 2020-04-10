@@ -14,10 +14,10 @@ sudo apt-get install swi-prolog
 * Download and execute *swipl-8.0.3-1.x(64/32).exe*
 
 ### Download and Run
-* Download `TicTacToeGame.pl`.
+* Download `main.pl`.
 * Run:
 ```
-$ swipl --no-top-level TicTacToeGame.pl
+$ swipl --no-top-level main.pl
 ``` 
 
 ### How azul works...
