@@ -10,9 +10,9 @@ sort_players_(Head, [], Head).
 
 sort_players_(Head, [Term | Tail], Result) :-
     special(Term),
-    retract(special(Term)),
-    assert(special(middle)),
-    my_concat([Term | Tail], Head, Result).
+    retract(special(Term)), 
+    assert(special(middle)), % Special piece back into the middle.
+    my_concat([Term | Tail], Head, Result), !.
 
 sort_players_(Head, [Term | Tail], Result) :-
     my_concat(Head, [Term], NHead),
