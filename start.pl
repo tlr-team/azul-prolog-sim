@@ -3,6 +3,138 @@
 :- dynamic factories/1.
 :- dynamic special/1.
 
+%player pieces board connected relation
+% 1,1
+connected((1,1),(1,1)).
+connected((1,1),(1,2)).
+connected((1,1),(2,1)).
+% 1,2
+connected((1,2),(1,1)).
+connected((1,2),(1,2)).
+connected((1,2),(1,3)).
+connected((1,2),(2,2)).
+% 1,3
+connected((1,3),(1,2)).
+connected((1,3),(1,3)).
+connected((1,3),(1,4)).
+connected((1,3),(2,3)).
+% 1,4
+connected((1,4),(1,3)).
+connected((1,4),(1,4)).
+connected((1,4),(1,5)).
+connected((1,4),(2,4)).
+% 1,5
+connected((1,5),(1,4)).
+connected((1,5),(1,5)).
+connected((1,5),(2,5)).
+% 2,1
+connected((2,1),(1,1)).
+connected((2,1),(2,1)).
+connected((2,1),(2,2)).
+connected((2,1),(3,1)).
+% 2,2
+connected((2,2),(1,2)).
+connected((2,2),(2,1)).
+connected((2,2),(2,2)).
+connected((2,2),(2,3)).
+connected((2,2),(3,2)).
+% 2,3
+connected((2,3),(1,3)).
+connected((2,3),(2,2)).
+connected((2,3),(2,3)).
+connected((2,3),(2,4)).
+connected((2,3),(3,3)).
+% 2,4
+connected((2,4),(1,4)).
+connected((2,4),(2,3)).
+connected((2,4),(2,4)).
+connected((2,4),(2,5)).
+connected((2,4),(3,4)).
+% 2,5
+connected((2,5),(1,5)).
+connected((2,5),(2,4)).
+connected((2,5),(2,5)).
+connected((2,5),(3,5)).
+% 3,1
+connected((3,1),(2,1)).
+connected((3,1),(3,1)).
+connected((3,1),(4,1)).
+connected((3,1),(3,2)).
+% 3,2
+connected((3,2),(3,1)).
+connected((3,2),(3,2)).
+connected((3,2),(3,3)).
+connected((3,2),(2,2)).
+connected((3,2),(4,2)).
+% 3,3
+connected((3,3),(3,2)).
+connected((3,3),(3,3)).
+connected((3,3),(3,4)).
+connected((3,3),(2,3)).
+connected((3,3),(4,3)).
+% 3,4
+connected((3,4),(3,3)).
+connected((3,4),(3,4)).
+connected((3,4),(3,5)).
+connected((3,4),(2,4)).
+connected((3,4),(4,4)).
+% 3,5
+connected((3,5),(3,4)).
+connected((3,5),(3,5)).
+connected((3,5),(4,5)).
+connected((3,5),(2,5)).
+% 4,1
+connected((4,1),(4,1)).
+connected((4,1),(3,1)).
+connected((4,1),(5,1)).
+connected((4,1),(4,2)).
+% 4,2
+connected((4,2),(4,1)).
+connected((4,2),(4,2)).
+connected((4,2),(4,3)).
+connected((4,2),(3,2)).
+connected((4,2),(5,2)).
+% 4,3
+connected((4,3),(4,2)).
+connected((4,3),(4,3)).
+connected((4,3),(4,4)).
+connected((4,3),(3,3)).
+connected((4,3),(5,3)).
+% 4,4
+connected((4,4),(4,3)).
+connected((4,4),(4,4)).
+connected((4,4),(4,5)).
+connected((4,4),(3,4)).
+connected((4,4),(5,4)).
+% 4,5
+connected((4,5),(4,4)).
+connected((4,5),(4,5)).
+connected((4,5),(3,5)).
+connected((4,5),(5,5)).
+% 5,1
+connected((5,1),(4,1)).
+connected((5,1),(5,1)).
+connected((5,1),(5,2)).
+% 5,2
+connected((5,2),(5,1)).
+connected((5,2),(5,2)).
+connected((5,2),(5,3)).
+connected((5,2),(4,2)).
+% 5,3
+connected((5,3),(5,2)).
+connected((5,3),(5,3)).
+connected((5,3),(5,4)).
+connected((5,3),(4,3)).
+% 5,4
+connected((5,4),(5,3)).
+connected((5,4),(5,4)).
+connected((5,4),(5,5)).
+connected((5,4),(4,4)).
+% 5,5
+connected((5,5),(5,4)).
+connected((5,5),(5,5)).
+connected((5,5),(4,5)).
+
 %factory list
 factories([]).
 
