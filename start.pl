@@ -142,7 +142,7 @@ factories([]).
 %Special piece location.
 special(middle).
 
-%pices gab
+%pieces bag
 bag([azul, azul, azul, azul, azul,
     azul, azul, azul, azul, azul,
     azul, azul, azul, azul, azul,
@@ -226,4 +226,9 @@ connected_by_column((T,Z), (D,C), L) :-
     my_remove((A,B),L,NL),
     connected_by_column((T,Z),(A,B),NL).
     
-    
+% calculates the score of add a piece in the position x,y on the players board.
+calc_score((X,Y), Pieces, Val) :-
+    findall((A,B), connected_by_column((A,B), (X,Y), Pieces), CP),
+    findall((A,B), connected_by_row((A,B), (X,Y), Pieces), RP),
+    my_concat(CP, RP, U),
+    my_count(U, Val).
