@@ -192,3 +192,38 @@ factory_fill(Number, Size, L) :-
     Nnumber is Number - 1,
     factory_fill(Nnumber, Size, [F|L]).
 
+same_row((X,_),(X,_)).
+
+same_column((_,Y),(_,Y)).
+
+same_point((A,B),(A,B)).
+
+% wins if (A,B) is in the same row as (C,D) in L
+direct_connected_row((A,B),(C,D),L) :-
+    same_row((A,B),(C,D)),
+    my_member((A,B),L),
+    connected((A,B),(C,D)).
+
+connected_by_row((A,B), (D,C), L) :-
+    direct_connected_row((A,B), (D,C), L).
+
+connected_by_row((T,Z), (D,C), L) :-
+    direct_connected_row((A,B),(D,C),L),
+    my_remove((A,B),L,NL),
+    connected_by_row((T,Z),(A,B),NL).
+
+% wins if (A,B) is in the same column as (C,D) in L
+direct_connected_column((A,B),(C,D),L) :-
+    same_column((A,B),(C,D)),
+    my_member((A,B),L),
+    connected((A,B),(C,D)).
+
+connected_by_column((A,B), (D,C), L) :-
+    direct_connected_column((A,B), (D,C), L).
+
+connected_by_column((T,Z), (D,C), L) :-
+    direct_connected_column((A,B),(D,C),L),
+    my_remove((A,B),L,NL),
+    connected_by_column((T,Z),(A,B),NL).
+    
+    
