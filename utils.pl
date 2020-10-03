@@ -19,6 +19,13 @@ my_insert(X,[A|Y],[A|Z]) :- my_insert(X,Y,Z).
 
 my_remove(X,Y,Z) :- my_insert(X,Z,Y).
 
+my_count(L, R) :-
+    my_count(L, 0, R).
 
+my_count([], A, A).
 
+my_count([X|Y], A, R) :-
+    Newa is A + 1,
+    my_count(Y, Newa, R).
+    
 
