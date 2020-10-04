@@ -204,3 +204,6 @@ floor(6, -11).
 floor(7, -14).
 % careful with this case
 floor(_, 14).
+
+factories_number(9).
+pieces_per_factory(4).

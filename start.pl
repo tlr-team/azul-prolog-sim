@@ -11,7 +11,9 @@ start_game :-
     assert(bag(L)),
     %factory list
     assert(factories([])),
-    factory_fill(9,4),
+    factories_number(FN).
+    pieces_per_factory(PPF).
+    factory_fill(FN,PPF),
     %middle board
     assert(middle([])),
     %Special piece location.
