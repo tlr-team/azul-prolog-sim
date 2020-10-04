@@ -4,7 +4,7 @@ my_member(X, [X|_]).
 my_member(X, [_|Y]) :- my_member(X,Y).
 
 % check for a M times member
-member_count(X, Y, 0).
+member_count(_, _, 0).
 member_count(X, [X|Y], M) :-
     N is M - 1,
     member_count(X,Y,N).
@@ -24,7 +24,7 @@ my_count(L, R) :-
 
 my_count([], A, A).
 
-my_count([X|Y], A, R) :-
+my_count([_|Y], A, R) :-
     Newa is A + 1,
     my_count(Y, Newa, R).
     

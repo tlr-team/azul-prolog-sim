@@ -45,7 +45,7 @@ factory_gen(Size, Result, Acc) :-
 factory_fill(Number, Size) :-
     factory_fill(Number, Size, []).
 
-factory_fill(0, Size, Factories) :-
+factory_fill(0, _, Factories) :-
     factories(L),
     retract(factories(L)),
     assert(factories(Factories)), !.

@@ -203,4 +203,4 @@ floor(5, -8).
 floor(6, -11).
 floor(7, -14).
 % careful with this case
-floor(X, 14).
+floor(_, 14).
