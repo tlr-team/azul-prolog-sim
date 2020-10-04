@@ -11,8 +11,8 @@ start_game :-
     assert(bag(L)),
     %factory list
     assert(factories([])),
-    factories_number(FN).
-    pieces_per_factory(PPF).
+    factories_number(FN),
+    pieces_per_factory(PPF),
     factory_fill(FN,PPF),
     %middle board
     assert(middle([])),
@@ -97,3 +97,23 @@ calc_score((X,Y), Pieces, Val) :-
     findall((A,B), connected_by_row((A,B), (X,Y), Pieces), RP),
     my_concat(CP, RP, U),
     my_count(U, Val).
+
+complete_row(Pieces, Row, Result) :-
+    my_member((Row,1), Pieces),
+    my_member((Row,2), Pieces),
+    my_member((Row,3), Pieces),
+    my_member((Row,4), Pieces),
+    my_member((Row,5), Pieces),
+    Result is 2.
+
+complete_row(_, _, 0).
+
+complete_column(Pieces, Column, Result) :-
+    my_member((1,Column), Pieces),
+    my_member((2,Column), Pieces),
+    my_member((3,Column), Pieces),
+    my_member((4,Column), Pieces),
+    my_member((5,Column), Pieces),
+    Result is 7.
+
+complete_column(_, _, 0).
