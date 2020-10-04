@@ -164,6 +164,14 @@ bag([azul, azul, azul, azul, azul,
     blanco, blanco, blanco, blanco, blanco,
     blanco, blanco, blanco, blanco, blanco]).
 
+default_table([
+        (1, [], none),
+        (2, [], none),
+        (3, [], none),
+        (4, [], none),
+        (5, [], none)
+    ]).
+
 default_board([
         [
             (1,1,azul),
