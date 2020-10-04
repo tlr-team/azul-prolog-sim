@@ -27,5 +27,10 @@ my_count([], A, A).
 my_count([_|Y], A, R) :-
     Newa is A + 1,
     my_count(Y, Newa, R).
+
+my_subllist(L, T) :-
+    my_member(X,L),
+    my_member(X,T).
+    
     
 
