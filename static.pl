@@ -205,5 +205,14 @@ floor(7, -14).
 % careful with this case
 floor(_, 14).
 
+
 factories_number(9).
 pieces_per_factory(4).
+
+% list of all position combinations of the colours in the board
+complete_colours([
+    [(1,1),(2,2),(3,3),(4,4),(5,5)], %blue colour
+    [(1,2),(2,3),(3,4),(4,5),(5,1)], %orange colour
+    [(1,3),(2,4),(3,5),(4,1),(5,2)], %red colour
+    [(1,4),(2,5),(3,1),(4,2),(5,3)], %Black colour
+    [(1,5),(2,1),(3,2),(4,3),(5,4)]]). %white colour
