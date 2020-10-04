@@ -196,6 +196,17 @@ default_board([
             (5,4,blanco),
             (5,5,azul)],]).
 
+
+% amount of pieces on the players floor
+floor(1, -1).
+floor(2, -2).
+floor(3, -4).
+floor(4, -6).
+floor(5, -8).
+floor(6, -11).
+floor(7, -14).
+floor(X, -14).
+
 % Result is a new Factory (color list)
 factory_gen(Size, Result) :-
     factory_gen(Size, [], Result).
