@@ -22,7 +22,7 @@ start_game :-
     assert(player(1,0,[], Board, Table, [])),
     assert(player(2,0,[], Board, Table, [])),
     assert(player(3,0,[], Board, Table, [])),
-    assert(player(4,0,[], Board, Table, []))
+    assert(player(4,0,[], Board, Table, [])).
    
 
 
