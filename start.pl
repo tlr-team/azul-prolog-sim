@@ -194,7 +194,7 @@ default_board([
             (5,2,rojo),
             (5,3,negro),
             (5,4,blanco),
-            (5,5,azul)],]).
+            (5,5,azul)]]).
 
 
 % amount of pieces on the players floor
