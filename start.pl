@@ -117,3 +117,15 @@ complete_column(Pieces, Column, Result) :-
     Result is 7.
 
 complete_column(_, _, 0).
+
+%take all the pieces of the same type from one factory
+take_color(Factory, Color, Pieces, Rest) :-
+    take_color_(Factory, Color, Pieces, Rest, [], []).
+
+take_color_([], Color, Pieces, Rest, Pieces, Rest).
+
+take_color_([A|B], A, Pieces, Rest, PiecesAcc, RestAcc) :-
+    take_color_(B, A, Pieces, Rest, [A|PiecesAcc], RestAcc), !.
+
+take_color_([A|B], Color, Pieces, Rest, PiecesAcc, RestAcc) :-
+    take_color_(B, Color, Pieces, Rest, PiecesAcc, [A|RestAcc]).
