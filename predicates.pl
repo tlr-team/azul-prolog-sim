@@ -173,5 +173,9 @@ player_move(Player) :-
     player(Player, Score, Pieces, Board, Table, Floor),
     select_row(Fila).
 
+select_row(X) :-
+    row(L),
+    random_select(X, L, _).
+
     
     
