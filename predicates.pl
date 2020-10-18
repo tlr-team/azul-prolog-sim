@@ -173,9 +173,20 @@ player_move(Player) :-
     player(Player, Score, Pieces, Board, Table, Floor),
     select_row(Fila).
 
-select_row(X) :-
+select_row(Row) :-
     row(L),
-    random_select(X, L, _).
-
+    random_select(Row, L, _).
     
+% choose existing row color
+select_row_color(Row, Color, Table) :-
+    my_member((Row, _, Color), Table),
+    colors(Color_List),
+    my_member(Color, Color_List),!.
+
+% none row color case
+select_row_color(Row, Color, _) :-
+    colors(Color_List),
+    random_select(Color, Color_List, _).
+
+
     

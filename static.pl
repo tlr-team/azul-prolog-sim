@@ -219,3 +219,6 @@ complete_colours([
 
 % number row list
 row([1,2,3,4,5]).
+
+% color list
+colors([azul, naranja, rojo, negro, blanco]).
