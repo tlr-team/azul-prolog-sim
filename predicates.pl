@@ -169,7 +169,7 @@ sort_players_(Head, [Term | Tail], Result) :-
     my_concat(Head, [Term], NHead),
     sort_players_(NHead, Tail, Result).
 
-player_move(Player) :-
+player_move(Player, Factories, Middle) :-
     player(Player, Score, Pieces, Board, Table, Floor),
     select_row(Fila),
     select_row_color(Fila, Color, Table).
@@ -189,5 +189,18 @@ select_row_color(_, Color, _) :-
     colors(Color_List),
     random_select(Color, Color_List, _).
 
+best_move(Factories, Middle, Board, Table, Row, Color, Move) :-
+    all_moves(Factories, Middle, Table, Row, Color, [], Moves).
 
+all_moves(Factories, Middle, Table, Row, Color, Acc, Moves) :-
+    setof(Factory, possible_factory(Factory, Color, Factories), Acc).
+
+% wins if a color belongs to a factory
+possible_move(Color, Factory) :-
+    my_member(Color, Factory).
+
+% wins if Color belongs to Factory and Factory belongs to Factories
+possible_factory(Factory, Color, Factories) :-
+    my_member(Factory, Factories),
+    possible_move(Color,Factory).
     
