@@ -171,7 +171,8 @@ sort_players_(Head, [Term | Tail], Result) :-
 
 player_move(Player) :-
     player(Player, Score, Pieces, Board, Table, Floor),
-    select_row(Fila).
+    select_row(Fila),
+    select_row_color(Fila, Color, Table).
 
 select_row(Row) :-
     row(L),
@@ -184,7 +185,7 @@ select_row_color(Row, Color, Table) :-
     my_member(Color, Color_List),!.
 
 % none row color case
-select_row_color(Row, Color, _) :-
+select_row_color(_, Color, _) :-
     colors(Color_List),
     random_select(Color, Color_List, _).
 
