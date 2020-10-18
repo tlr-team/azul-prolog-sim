@@ -129,3 +129,49 @@ take_color_([A|B], A, Pieces, Rest, PiecesAcc, RestAcc) :-
 
 take_color_([A|B], Color, Pieces, Rest, PiecesAcc, RestAcc) :-
     take_color_(B, Color, Pieces, Rest, PiecesAcc, [A|RestAcc]).
+
+take_all_moves(Factory, Result) :-
+    take_all_moves_(Factory, Result, []).
+
+take_all_moves_([], Result, Result).
+
+take_all_moves_(Factory, Result, Acc) :-
+    my_member(X, Factory),
+    take_color(Factory, X, Pieces, Rest),
+    not(my_member((Pieces, Rest), Acc)),
+
+my_max([], 0).
+
+my_max(Lista, Res) :-
+    my_member(X, Lista),
+    max_(Lista, X),
+    Res is X, !.
+
+max_([], _).
+
+max_([X | Tail], Max) :-
+    Max >= X,
+    max_(Tail, Max).
+
+% special(player) list sort. (sort_players([1,2,3,4], R))
+sort_players(L, Result) :-
+    sort_players_([], L, Result).
+
+sort_players_(Head, [], Head).
+
+sort_players_(Head, [Term | Tail], Result) :-
+    special(Term),
+    retract(special(Term)), 
+    assert(special(middle)), % Special piece back into the middle.
+    my_concat([Term | Tail], Head, Result), !.
+
+sort_players_(Head, [Term | Tail], Result) :-
+    my_concat(Head, [Term], NHead),
+    sort_players_(NHead, Tail, Result).
+
+player_move(Player) :-
+    player(Player, Score, Pieces, Board, Table, Floor),
+    select_row(Fila).
+
+    
+    
