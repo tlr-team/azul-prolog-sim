@@ -190,10 +190,11 @@ select_row_color(_, Color, _) :-
     random_select(Color, Color_List, _).
 
 best_move(Factories, Middle, Board, Table, Row, Color, Move) :-
-    all_moves(Factories, Middle, Table, Row, Color, [], Moves).
+    all_moves(Factories, Middle, Table, Row, Color, Moves).
 
-all_moves(Factories, Middle, Table, Row, Color, Acc, Moves) :-
-    setof(Factory, possible_factory(Factory, Color, Factories), Acc).
+all_moves(Factories, Middle, Table, Row, Color, Moves) :-
+    setof(Factory, possible_factory(Factory, Color, Factories), Moves).
+    
 
 % wins if a color belongs to a factory
 possible_move(Color, Factory) :-
@@ -203,4 +204,21 @@ possible_move(Color, Factory) :-
 possible_factory(Factory, Color, Factories) :-
     my_member(Factory, Factories),
     possible_move(Color,Factory).
+
+calc_scores(Factories, Color,Result) :-
+    calc_scores_(Factories, Color, Result, []).
+
+calc_scores_([], Color, Result, Acc) :-
+    middle(L),
+    possible_move(Color, L).
+    %calc_score
+    %añadirla con el score
+
+% calc_scores_([], _, _, Result, Result).
+
+% calc_scores_([X|Tail], Color, Result, ()) :-
     
+preproces_all_moves([], Acc, Acc).
+
+preproces_all_moves([Move | Tail], Acc , Result) :-
+    preproces_all_moves(Tail, [(Move, fatories) | Acc], Result).
