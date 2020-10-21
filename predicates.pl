@@ -190,7 +190,10 @@ select_row_color(_, Color, _) :-
     random_select(Color, Color_List, _).
 
 best_move(Factories, Middle, Board, Table, Row, Color, Move) :-
-    all_moves(Factories, Middle, Table, Row, Color, Moves).
+    all_moves(Factories, Middle, Table, Row, Color, Moves),
+    preproces_all_moves(Moves, SourceMoves),
+    check_middle_move(SourceMoves, MovesWithMiddle).
+    check_scores(MovesWithMiddle, Board, Table, Row, Color, [] ,MovesWithScore),
 
 all_moves(Factories, Middle, Table, Row, Color, Moves) :-
     setof(Factory, possible_factory(Factory, Color, Factories), Moves).
@@ -217,8 +220,21 @@ calc_scores_([], Color, Result, Acc) :-
 % calc_scores_([], _, _, Result, Result).
 
 % calc_scores_([X|Tail], Color, Result, ()) :-
-    
+
+% converts moves into (Move, factories) format
 preproces_all_moves([], Acc, Acc).
 
 preproces_all_moves([Move | Tail], Acc , Result) :-
     preproces_all_moves(Tail, [(Move, fatories) | Acc], Result).
+
+check_middle_move(Moves, Color, [(L, middle) | Moves]) :-
+    middle(L),
+    possible_move(Color, L), !.
+
+check_middle_move(Moves, _, Moves).
+
+check_scores([], _, _, _, _, Acc, Acc).
+
+check_scores([Move | Tail]], Board, Table, Row, Color, Acc ,Result) :-
+    calc_scores(Move, Board, Table, Row, Color, Score),
+    check_scores(Tail, Board, Table, Row, Color, [(Move, Score) | Acc], Result).
