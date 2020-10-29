@@ -169,10 +169,23 @@ sort_players_(Head, [Term | Tail], Result) :-
     my_concat(Head, [Term], NHead),
     sort_players_(NHead, Tail, Result).
 
-player_move(Player, Factories, Middle) :-
-    player(Player, Score, Pieces, Board, Table, Floor),
+player_move(PlayerNumber) :-
+    player(PlayerNumber, Score, Pieces, Board, Table, Floor),
+    % selected row to play
     select_row(Fila),
-    select_row_color(Fila, Color, Table).
+    % choose row playable color
+    select_row_color(Fila, Color, Table),
+    % take the best possible move ( it is a factory )
+    best_player_move(Fila, Color, Board, Table, Best_Move),
+    % plays the selected move
+    play_move(Fila, Color, Board, Table, Best_Move),
+    % change the game logic
+    update_game(Best_Move).
+
+best_player_move(Fila, Color, Board, Table, Move):-
+    factories(Factorias),
+    middle(Medio),
+    best_move(Factorias, Medio, Board, Table, Fila, Color, Move).
 
 select_row(Row) :-
     row(L),
@@ -192,8 +205,9 @@ select_row_color(_, Color, _) :-
 best_move(Factories, Middle, Board, Table, Row, Color, Move) :-
     all_moves(Factories, Middle, Table, Row, Color, Moves),
     preproces_all_moves(Moves, SourceMoves),
-    check_middle_move(SourceMoves, MovesWithMiddle).
-    check_scores(MovesWithMiddle, Board, Table, Row, Color, [] ,MovesWithScore),
+    check_middle_move(SourceMoves, [Move | _]).
+    % check_middle_move(SourceMoves, MovesWithMiddle).
+    % todo choose the best move check_scores(MovesWithMiddle, Board, Table, Row, Color, [] ,MovesWithScore),
 
 all_moves(Factories, Middle, Table, Row, Color, Moves) :-
     setof(Factory, possible_factory(Factory, Color, Factories), Moves).
@@ -221,7 +235,7 @@ calc_scores_([], Color, Result, Acc) :-
 
 % calc_scores_([X|Tail], Color, Result, ()) :-
 
-% converts moves into (Move, factories) format
+% converts moves into (Move, "factories") format
 preproces_all_moves([], Acc, Acc).
 
 preproces_all_moves([Move | Tail], Acc , Result) :-
