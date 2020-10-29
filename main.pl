@@ -1,4 +1,6 @@
 
+:- [predicates].
+
 % Prepare board and call main loop
 go :- 
     start_game,
@@ -15,12 +17,15 @@ loop :-
 
 % empty board and round end
 play_round :- 
-    board_empty.
+    (game_end ; board_empty), !.
 
 % each player makes its move
 play_round :-
-    player1_move,
-    player2_move,
-    player3_move,
-    player4_move,
-    play_round.
+    sort_players([1,2,3,4], Order),
+    my_member(PlayerNumber, Order),
+    player_move(PlayerNumber),
+    print_player(PlayerNumber).
+
+%prints player state
+print_player(PlayerNumber):-
+    true.
