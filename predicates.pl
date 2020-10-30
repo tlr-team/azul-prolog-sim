@@ -177,28 +177,65 @@ player_move(PlayerNumber) :-
     select_row_color(Fila, Color, Table),
     % take the best possible move ( it is a factory )
     best_player_move(Fila, Color, Board, Table, Best_Move),
-    % change the game logic
-    update_game(Best_Move, PlayerNumber),
     % plays the selected move
-    play_move(PlayerNumber, Color, Row, Best_Move).
+    play_move(PlayerNumber, Color, Row, Best_Move, Resto),
+    % change the game logic
+    update_game(Best_Move, Resto, PlayerNumber). %#TODO añadir el resto de la factoria
 
-update_game((Factory, factories)):-
+play_move(PlayerNumer, Color, Row, (Factory, Place), Resto) :-
+    player(PlayerNumber, Score, _, Board, Table, Floor),
+    take_color(Factory, Color, Fichas, Resto),
+    insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewFloor).
+
+% read declaration
+insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, [Resto|Floor]) :-
+    my_remove((Row, Acc, _), Table, MiddleTable),
+    add_pieces(Fichas, Acc, Row, Color, NewAcc, Resto),
+    my_insert((Row, NewAcc, Color), Table, NewTable).
+
+
+% fills A Table Row
+add_pieces([], Actuales, Row, Color, Actuales, []).
+
+add_pieces(Fichas, Actuales, Row, Color, Actuales, Fichas) :-
+    member_count(Color, Actuales, Row).
+
+add_pieces([A|B], Actuales, Row, Color, Changed, Rest) :-
+    add_pieces(B, [A|Actuales], Row, Color, Changed, Rest).
+
+update_game((Factory, factories), Resto, PlayerNumber):-
     factories(Facts),
     my_remove(Factory, Factories, Result),
+    update_factories(Result, Resto, NResult)
     retract(factories(Facts)),
-    assert(factories(Result)).
+    assert(factories(NResult)).
     
-update_game((Middle, middle)) :-
+update_game((Middle, middle), Resto, PlayerNumber) :-
     middle(Medio),
-    my_remove(Middle, Medio, Result),
     retract(middle(Medio)),
-    assert(middle(Result)).
+    assert(middle(Resto)),
+    update_middle_piece(PlayerNumber).
+
+% inserts back the pieces left
+update_factories(Factories, [], Factories).
+
+update_factories(Factories, Rest, Result) :-
+    my_insert(Rest, Factories, Result).
+
+%moves the special piece
+update_middle_piece(PlayerNumber) :-
+    special(middle),
+    retract(special(middle)),
+    assert(special(PlayerNumber)), !.
+
+update_middle_piece(_).
 
 best_player_move(Fila, Color, Board, Table, Move):-
     factories(Factorias),
     middle(Medio),
     best_move(Factorias, Medio, Board, Table, Fila, Color, Move).
 
+% mejorar el select row para que seleccione una fila que se pueda jugar (pueden estar llenas)
 select_row(Row) :-
     row(L),
     random_select(Row, L, _).
