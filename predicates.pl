@@ -182,6 +182,12 @@ player_move(PlayerNumber) :-
     % change the game logic
     update_game(Best_Move, Resto, PlayerNumber). %#TODO añadir el resto de la factoria
 
+% triunfa si (A. List, col) es miembre de table pero no esta completo
+full_row((A, List, Col), Table) :-
+    my_member((A, List, Col), Table),
+    not(member_count(Col, List, A)).
+    
+
 play_move(PlayerNumer, Color, Row, (Factory, Place), Resto) :-
     player(PlayerNumber, Score, _, Board, Table, Floor),
     take_color(Factory, Color, Fichas, Resto),
@@ -236,9 +242,10 @@ best_player_move(Fila, Color, Board, Table, Move):-
     best_move(Factorias, Medio, Board, Table, Fila, Color, Move).
 
 % mejorar el select row para que seleccione una fila que se pueda jugar (pueden estar llenas)
-select_row(Row) :-
-    row(L),
-    random_select(Row, L, _).
+select_row(Row, Table) :-
+    %row(L),
+    findall((A, List, Color), full_row((A, List, Color), Table), Result)
+    random_select((Row, _, _), Result, _).
     
 % choose existing row color
 select_row_color(Row, Color, Table) :-
