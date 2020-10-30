@@ -177,10 +177,22 @@ player_move(PlayerNumber) :-
     select_row_color(Fila, Color, Table),
     % take the best possible move ( it is a factory )
     best_player_move(Fila, Color, Board, Table, Best_Move),
-    % plays the selected move
-    play_move(Fila, Color, Board, Table, Best_Move),
     % change the game logic
-    update_game(Best_Move).
+    update_game(Best_Move, PlayerNumber),
+    % plays the selected move
+    play_move(PlayerNumber, Color, Row, Best_Move).
+
+update_game((Factory, factories)):-
+    factories(Facts),
+    my_remove(Factory, Factories, Result),
+    retract(factories(Facts)),
+    assert(factories(Result)).
+    
+update_game((Middle, middle)) :-
+    middle(Medio),
+    my_remove(Middle, Medio, Result),
+    retract(middle(Medio)),
+    assert(middle(Result)).
 
 best_player_move(Fila, Color, Board, Table, Move):-
     factories(Factorias),
