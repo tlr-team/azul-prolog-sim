@@ -4,7 +4,8 @@
 % Prepare board and call main loop
 go :- 
     start_game,
-    loop.
+    loop,
+    print_winner.
 
 % check winning condition
 loop :- 
@@ -54,4 +55,23 @@ refill_round :-
     %Special piece location.
     special(Location),
     retract(special(Location)),
-    assert(special(middle)),
+    assert(special(middle)).
+
+game_end :-
+    % a player fill an entire row
+    player(1, _, Pieces1, _, _, _),
+    player(2, _, Pieces2, _, _, _),
+    player(3, _, Pieces3, _, _, _),
+    player(4, _, Pieces4, _, _, _),
+    (   completed_some_row(Pieces1);
+        completed_some_row(Pieces2);
+        completed_some_row(Pieces3);
+        completed_some_row(Pieces4) ).
+    
+% check all rows for completion
+completed_some_row(Pieces):-
+    completed_row(Pieces, 1);
+    completed_row(Pieces, 2);
+    completed_row(Pieces, 3);
+    completed_row(Pieces, 4);
+    completed_row(Pieces, 5).
