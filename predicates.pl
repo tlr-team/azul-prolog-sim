@@ -98,25 +98,26 @@ calc_score((X,Y), Pieces, Val) :-
     my_concat(CP, RP, U),
     my_count(U, Val).
 
-complete_row(Pieces, Row, Result) :-
+complete_row_puntuation(Pieces, Row, 2) :-
+    completed_row(Pieces, Row).
+
+complete_row_puntuation(_, _, 0).
+
+completed_row(Pieces, Row) :-
     my_member((Row,1), Pieces),
     my_member((Row,2), Pieces),
     my_member((Row,3), Pieces),
     my_member((Row,4), Pieces),
-    my_member((Row,5), Pieces),
-    Result is 2.
+    my_member((Row,5), Pieces).
 
-complete_row(_, _, 0).
-
-complete_column(Pieces, Column, Result) :-
+complete_column_puntuation(Pieces, Column, 7) :-
     my_member((1,Column), Pieces),
     my_member((2,Column), Pieces),
     my_member((3,Column), Pieces),
     my_member((4,Column), Pieces),
-    my_member((5,Column), Pieces),
-    Result is 7.
+    my_member((5,Column), Pieces).
 
-complete_column(_, _, 0).
+complete_column_puntuation(_, _, 0).
 
 %take all the pieces of the same type from one factory
 take_color(Factory, Color, Pieces, Rest) :-
