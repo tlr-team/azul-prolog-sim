@@ -12,12 +12,22 @@ loop :-
 
 % round play
 loop :- 
-    play_round,
+    play_game,
     loop.
+
+% main game loop
+play_game :-
+    game_end, !.
+
+play_game :-
+    refill_round,
+    play_round,
+    calc_scores,
+    play_game.
 
 % empty board and round end
 play_round :- 
-    (game_end ; board_empty), !.
+    board_empty, !.
 
 % each player makes its move
 play_round :-
@@ -29,3 +39,19 @@ play_round :-
 %prints player state
 print_player(PlayerNumber):-
     true.
+
+refill_round :-
+    % release previos bag
+    bag(T),
+    retract(bag(T)),
+    % retake pieces from gab
+    default_bag(L),
+    assert(bag(L)),
+    %factory list
+    factories_number(FN),
+    pieces_per_factory(PPF),
+    factory_fill(FN,PPF),
+    %Special piece location.
+    special(Location),
+    retract(special(Location)),
+    assert(special(middle)),
