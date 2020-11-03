@@ -37,9 +37,50 @@ play_round :-
     player_move(PlayerNumber),
     print_player(PlayerNumber).
 
+
+
+
+
 %prints player state
 print_player(PlayerNumber):-
-    true.
+    player(PlayerNumber, Score, Pieces, Board, Table, Floor),
+    write("Player "), write(PlayerNumber), nl, nl,
+    print_pieces(Pieces), nl, nl,
+    print_table(Table), nl, nl
+    print_floor(Floor), nl.
+
+print_floor(Floor) :-
+    len_count(Floor, Pieces),
+    write (" Floor: "), write(Pieces), write(" pieces").
+
+print_table(Table) :-
+    my_member((Row, Pieces, Color), Table),
+    print_row(Row, Pieces, Color), nl.
+
+print_row(Row, _, none) :-
+    write(" Row "), write(Row), write(":"),
+    write(" has no pieces"), !.
+
+print_row(Row, Pieces, _):-
+    write(" Row "), write(Row), write(":"),
+    my_member(Piece, Pieces),
+    write(" "), write(Piece), write(" ").
+    
+    
+
+print_pieces(Pieces) :-
+    default_board(T),
+    my_member(Row, T), nl,
+    my_member((X,Y,Color), Row),
+    print_one(X,Y,Color, Pieces).
+
+print_one(X, Y, Color, Pieces) :-
+    my_member((X,Y), Pieces),
+    write(" "), write(Color), write(" "), !.
+
+print_one(_, _, _, _) :-
+    write(" "), write("   -   "), write(" ").
+    
 
 refill_round :-
     % release previos bag

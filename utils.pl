@@ -11,6 +11,16 @@ member_count(X, [X|Y], M) :-
 member_count(X, [_|Y], M) :- 
     member_count(X, Y, M).
 
+len_count(X, Result) :-
+    len_count_(X, 0, Result).
+
+len_count_([], Acc, Acc).
+
+len_count_([ _ | A], Acc, Result) :-
+    NewAcc is Acc + 1,
+    len_count(A, NewAcc, Result).
+
+
 my_concat([],X,X).
 my_concat([X|L],Y,[X|Z]) :- my_concat(L,Y,Z).
 
