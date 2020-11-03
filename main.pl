@@ -35,10 +35,29 @@ play_round :-
     sort_players([1,2,3,4], Order),
     my_member(PlayerNumber, Order),
     player_move(PlayerNumber),
+    print_no_player,
     print_player(PlayerNumber).
 
 
+print_no_player :-
+    print_factories,
+    print_middle, nl.
 
+print_factories :-
+    factories(F),
+    my_member(X, F),
+    print_factory(X), nl.
+
+print_factory(Factory) :-
+    write(" Factory: "),
+    my_member(Piece, Factory),
+    write(" "), write(Piece), write("").
+
+print_middle :-
+    middle(Pieces),
+    write(" Middle: "),
+    my_member(P, Pieces),
+    write(" "), write(P), write(" ").
 
 
 %prints player state
