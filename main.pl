@@ -33,19 +33,24 @@ play_round :-
 % each player makes its move
 play_round :-
     sort_players([1,2,3,4], Order),
-    my_member(PlayerNumber, Order),
+    play_round_(Order).
+
+play_round_([]).
+
+play_round_([Player|Rest]) :-
     player_move(PlayerNumber),
     print_no_player,
-    print_player(PlayerNumber).
+    print_player(PlayerNumber),
+    play_round_(Rest).
 
 
 print_no_player :-
-    print_factories,
-    print_middle, nl.
+    print_factories, nl,
+    print_middle, nl, nl.
 
 print_factories :-
     factories(F),
-    print_fact_(F).
+    print_factories_(F).
 
 print_factories_([]).
 
@@ -62,10 +67,9 @@ print_middle :-
     write(" Middle: "),
     print_values(Pieces).
 
-
 %prints player state
 print_player(PlayerNumber):-
-    player(PlayerNumber, Score, Pieces, Board, Table, Floor),
+    player(PlayerNumber, _, Pieces, _, Table, Floor),
     write("Player "), write(PlayerNumber), nl, nl,
     print_pieces(Pieces), nl, nl,
     print_table(Table), nl, nl,
