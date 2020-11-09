@@ -45,19 +45,22 @@ print_no_player :-
 
 print_factories :-
     factories(F),
-    my_member(X, F),
-    print_factory(X), nl.
+    print_fact
+
+print_factories_([]).
+
+print_factories_([Factory | Tail]) :-
+    print_factory(Factory), nl,
+    print_factories_(Tail).
 
 print_factory(Factory) :-
     write(" Factory: "),
-    my_member(Piece, Factory),
-    write(" "), write(Piece), write("").
+    print_values(Factory).
 
 print_middle :-
     middle(Pieces),
     write(" Middle: "),
-    my_member(P, Pieces),
-    write(" "), write(P), write(" ").
+    print_values(Pieces).
 
 
 %prints player state

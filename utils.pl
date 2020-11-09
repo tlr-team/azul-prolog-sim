@@ -42,5 +42,10 @@ my_subllist(L, T) :-
     my_member(X,L),
     my_member(X,T).
     
+print_values([]).
+
+print_values([Head | Tail]) :-
+    write(" "), write(Head), write(" "),
+    print_values(Tail).
     
 
