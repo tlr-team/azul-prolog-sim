@@ -43,6 +43,24 @@ play_round_([Player|Rest]) :-
     print_player(PlayerNumber),
     play_round_(Rest).
 
+calc_scores :-
+    calc_scores_([1,2,3,4]).
+
+calc_scores_([]).
+
+calc_scores_([Player|Rest]) :-
+    player(Player, Score, Pieces, Board, Table, Floor),
+    findall((Row, Color), table_row_ready(Row, Color, Table), Targets),
+    update_board_and_pieces(Targets, Board, Pieces, NewBoard, NewPieces),
+    update_table(Targets, Table, NewTable),
+    calc_score(Targets, Board, Pieces, Floor, NewScore),
+    retract(player(Player, Score, Pieces, Board, Table, Floor)),
+    assert(player(Player, NewScore, NewPices, NewBoard, NewTable, [])).
+
+
+table_row_ready(Row, Color, Table) :-
+    my_member((Row, Pieces, Color), Table),
+    len_count(Pieces, Row).
 
 print_no_player :-
     print_factories, nl,
