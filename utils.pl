@@ -18,7 +18,7 @@ len_count_([], Acc, Acc).
 
 len_count_([ _ | A], Acc, Result) :-
     NewAcc is Acc + 1,
-    len_count(A, NewAcc, Result).
+    len_count_(A, NewAcc, Result).
 
 
 my_concat([],X,X).

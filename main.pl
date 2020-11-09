@@ -69,7 +69,7 @@ print_player(PlayerNumber):-
     write("Player "), write(PlayerNumber), nl, nl,
     print_pieces(Pieces), nl, nl,
     print_table(Table), nl, nl,
-    print_floor(Floor), nl.
+    print_floor(Floor), nl, !.
 
 print_floor(Floor) :-
     len_count(Floor, Pieces),
