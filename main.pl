@@ -45,7 +45,7 @@ print_no_player :-
 
 print_factories :-
     factories(F),
-    print_fact
+    print_fact_(F).
 
 print_factories_([]).
 
@@ -68,16 +68,24 @@ print_player(PlayerNumber):-
     player(PlayerNumber, Score, Pieces, Board, Table, Floor),
     write("Player "), write(PlayerNumber), nl, nl,
     print_pieces(Pieces), nl, nl,
-    print_table(Table), nl, nl
+    print_table(Table), nl, nl,
     print_floor(Floor), nl.
 
 print_floor(Floor) :-
     len_count(Floor, Pieces),
-    write (" Floor: "), write(Pieces), write(" pieces").
+    write(" Floor: "), write(Pieces), write(" pieces").
 
 print_table(Table) :-
-    my_member((Row, Pieces, Color), Table),
-    print_row(Row, Pieces, Color), nl.
+    my_member((1, Pieces1, Color1), Table),
+    print_row(1, Pieces1, Color1), nl,
+    my_member((2, Pieces2, Color2), Table),
+    print_row(2, Pieces2, Color2), nl,
+    my_member((3, Pieces3, Color3), Table),
+    print_row(3, Pieces3, Color3), nl,
+    my_member((4, Pieces4, Color4), Table),
+    print_row(4, Pieces4, Color4), nl,
+    my_member((5, Pieces5, Color5), Table),
+    print_row(5, Pieces5, Color5), nl.
 
 print_row(Row, _, none) :-
     write(" Row "), write(Row), write(":"),
@@ -85,16 +93,23 @@ print_row(Row, _, none) :-
 
 print_row(Row, Pieces, _):-
     write(" Row "), write(Row), write(":"),
-    my_member(Piece, Pieces),
-    write(" "), write(Piece), write(" ").
+    print_values(Pieces).
     
-    
-
 print_pieces(Pieces) :-
     default_board(T),
-    my_member(Row, T), nl,
-    my_member((X,Y,Color), Row),
-    print_one(X,Y,Color, Pieces).
+    print_pieces_(T, Pieces).
+
+print_pieces_([], _).
+
+print_pieces_([Head|Tail], Pieces) :-
+    print_row_pieces(Head, Pieces), nl,
+    print_pieces_(Tail, Pieces).
+
+print_row_pieces([], _).
+
+print_row_pieces([(X,Y,Color)|Tail], Pieces) :-
+    print_one(X,Y,Color, Pieces),
+    print_row_pieces(Tail, Pieces).
 
 print_one(X, Y, Color, Pieces) :-
     my_member((X,Y), Pieces),
