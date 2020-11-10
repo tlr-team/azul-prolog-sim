@@ -57,6 +57,13 @@ calc_scores_([Player|Rest]) :-
     retract(player(Player, Score, Pieces, Board, Table, Floor)),
     assert(player(Player, NewScore, NewPices, NewBoard, NewTable, [])).
 
+update_table([], Table, Table).
+
+update_table([(Row, Color)|Tail], Table, NewTable) :-
+    my_remove((Row, List, Color), Table),
+    my_insert((Row, [], none), Table, NextTable),
+    update_table(Tail, NextTable, NewTable).
+
 update_board_and_pieces(Targets, Board, Pieces, NewBoard, NewPieces) :- 
     update_board_and_pieces_(Targets, Board, Pieces, NewBoard, NewPieces).
 
