@@ -194,16 +194,16 @@ default_board([
 
 
 % amount of pieces on the players floor
-floor(0, 0).
-floor(1, -1).
-floor(2, -2).
-floor(3, -4).
-floor(4, -6).
-floor(5, -8).
-floor(6, -11).
-floor(7, -14).
+floor(0, 0), !.
+floor(1, -1), !.
+floor(2, -2), !.
+floor(3, -4), !.
+floor(4, -6), !.
+floor(5, -8), !.
+floor(6, -11), !.
+floor(7, -14), !.
 % careful with this case
-floor(_, 14).
+floor(_, -14).
 
 
 factories_number(9).

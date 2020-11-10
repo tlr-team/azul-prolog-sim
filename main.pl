@@ -51,11 +51,23 @@ calc_scores_([]).
 calc_scores_([Player|Rest]) :-
     player(Player, Score, Pieces, Board, Table, Floor),
     findall((Row, Color), table_row_ready(Row, Color, Table), Targets),
-    update_board_and_pieces(Targets, Board, Pieces, NewBoard, NewPieces),
+    update_board_and_pieces(Targets, Board, Pieces, NewBoard, NewPieces, SelectedPieces),
     update_table(Targets, Table, NewTable),
-    calc_score(Targets, Board, Pieces, Floor, NewScore),
+    calc_player_score(SelectedPieces, Board, Pieces, Floor, Score, NewScore),
     retract(player(Player, Score, Pieces, Board, Table, Floor)),
     assert(player(Player, NewScore, NewPices, NewBoard, NewTable, [])).
+
+calc_player_score([], _, Floor, Score, NewScore) :-
+    member_count(Floor, Count),
+    floor(Count, Value),
+    NewScore is Score + Value.
+
+calc_player_score([(Row, Column)|Tail], Pieces, Floor, Score, NewScore) :-
+    calc_score((Row, Column), Pieces, Value),
+    my_insert((Row, Column), Pieces, NextPieces),
+    NextScore is Score + Value,
+    calc_player_score(Tail, NextPieces, Floor, NextScore, NewScore).
+
 
 update_table([], Table, Table).
 
@@ -64,15 +76,16 @@ update_table([(Row, Color)|Tail], Table, NewTable) :-
     my_insert((Row, [], none), Table, NextTable),
     update_table(Tail, NextTable, NewTable).
 
-update_board_and_pieces(Targets, Board, Pieces, NewBoard, NewPieces) :- 
-    update_board_and_pieces_(Targets, Board, Pieces, NewBoard, NewPieces).
+update_board_and_pieces(Targets, Board, Pieces, NewBoard, NewPieces, SelectedPieces) :- 
+    update_board_and_pieces_(Targets, Board, Pieces, NewBoard, NewPieces, [], SelectedPieces).
 
-update_board_and_pieces_([], Board, Pieces, Board, Pieces).
+update_board_and_pieces_([], Board, Pieces, Board, Pieces, SelectedPieces, SelectedPieces).
 
-update_board_and_pieces_([(Row, Color) | Tail], Board, Pieces, NewBoard, NewPieces) :-
+update_board_and_pieces_([(Row, Color) | Tail], Board, Pieces, NewBoard, NewPieces, SelectedPiecesAcc, SelectedPieces) :-
     board_remove(Row, Color, Board, Piece, NextBoard),
     my_insert(Piece, Pieces, NextPieces),
-    update_board_and_pieces_(Tail, NextBoard, NextPieces, NewBoard, NewPieces).
+    my_insert(Piece, SelectedPiecesAcc, NextSelectedPieces)
+    update_board_and_pieces_(Tail, NextBoard, NextPieces, NewBoard, NewPieces, NextSelectedPieces, SelectedPieces).
 
 board_remove(Row, Color, Board, Piece, NewBoard) :-
     board_remove_(Row, Color, Board, Piece, [], NewBoard).
@@ -82,7 +95,7 @@ board_remove_(_, _, [], Piece, Board, Board).
 board_remove_(Row, Color, [Current | Tail], Piece, Acc, NewBoard) :-
     my_remove((Row, Column, Color), Current, NewCurrent),
     my_insert(NewCurrent, Acc, NewAcc),
-    board_remove(Row, Color, Tail, (Row, Column, Color), NewAcc, NewBoard), !.
+    board_remove(Row, Color, Tail, (Row, Column), NewAcc, NewBoard), !.
 
 board_remove_(Row, Color, [Curret | Tail], Piece, Acc, NewBoard) :-
     board_remove_(Row, Color, Tail, Piece, Acc, NewBoard).

@@ -279,12 +279,12 @@ possible_factory(Factory, Color, Factories) :-
     my_member(Factory, Factories),
     possible_move(Color,Factory).
 
-calc_scores(Factories, Color,Result) :-
-    calc_scores_(Factories, Color, Result, []).
+% calc_scores(Factories, Color,Result) :-
+%     calc_scores_(Factories, Color, Result, []).
 
-calc_scores_([], Color, Result, Acc) :-
-    middle(L),
-    possible_move(Color, L).
+% calc_scores_([], Color, Result, Acc) :-
+%     middle(L),
+%     possible_move(Color, L).
     %calc_score
     %añadirla con el score
 
