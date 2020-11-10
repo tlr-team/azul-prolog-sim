@@ -57,6 +57,30 @@ calc_scores_([Player|Rest]) :-
     retract(player(Player, Score, Pieces, Board, Table, Floor)),
     assert(player(Player, NewScore, NewPices, NewBoard, NewTable, [])).
 
+update_board_and_pieces(Targets, Board, Pieces, NewBoard, NewPieces) :- 
+    update_board_and_pieces_(Targets, Board, Pieces, NewBoard, NewPieces).
+
+update_board_and_pieces_([], Board, Pieces, Board, Pieces).
+
+update_board_and_pieces_([(Row, Color) | Tail], Board, Pieces, NewBoard, NewPieces) :-
+    board_remove(Row, Color, Board, Piece, NextBoard),
+    my_insert(Piece, Pieces, NextPieces),
+    update_board_and_pieces_(Tail, NextBoard, NextPieces, NewBoard, NewPieces).
+
+board_remove(Row, Color, Board, Piece, NewBoard) :-
+    board_remove_(Row, Color, Board, Piece, [], NewBoard).
+
+board_remove_(_, _, [], Piece, Board, Board).
+
+board_remove_(Row, Color, [Current | Tail], Piece, Acc, NewBoard) :-
+    my_remove((Row, Column, Color), Current, NewCurrent),
+    my_insert(NewCurrent, Acc, NewAcc),
+    board_remove(Row, Color, Tail, (Row, Column, Color), NewAcc, NewBoard), !.
+
+board_remove_(Row, Color, [Curret | Tail], Piece, Acc, NewBoard) :-
+    board_remove_(Row, Color, Tail, Piece, Acc, NewBoard).
+
+
 
 table_row_ready(Row, Color, Table) :-
     my_member((Row, Pieces, Color), Table),
