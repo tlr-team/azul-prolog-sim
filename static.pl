@@ -166,31 +166,31 @@ default_board([
             (1,2,naranja),
             (1,3,rojo),
             (1,4,negro),
-            (1,5,blanco)],
-        [
+            (1,5,blanco),
+
             (2,1,blanco),
             (2,2,azul),
             (2,3,naranja),
             (2,4,rojo),
-            (2,5,negro)],
-        [
+            (2,5,negro),
+
             (3,1,negro),
             (3,2,blanco),
             (3,3,azul),
             (3,4,naranja),
-            (3,5,rojo)],
-        [
+            (3,5,rojo),
+
             (4,1,rojo),
             (4,2,negro),
             (4,3,blanco),
             (4,4,azul),
-            (4,5,naranja)],
-        [
+            (4,5,naranja),
+
             (5,1,naranja),
             (5,2,rojo),
             (5,3,negro),
             (5,4,blanco),
-            (5,5,azul)]]).
+            (5,5,azul)]).
 
 
 % amount of pieces on the players floor
