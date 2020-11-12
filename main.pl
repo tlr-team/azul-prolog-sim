@@ -87,20 +87,8 @@ update_board_and_pieces_([(Row, Color) | Tail], Board, Pieces, NewBoard, NewPiec
     my_insert(Piece, SelectedPiecesAcc, NextSelectedPieces)
     update_board_and_pieces_(Tail, NextBoard, NextPieces, NewBoard, NewPieces, NextSelectedPieces, SelectedPieces).
 
-board_remove(Row, Color, Board, Piece, NewBoard) :-
-    board_remove_(Row, Color, Board, Piece, [], NewBoard).
-
-board_remove_(_, _, [], Piece, Board, Board).
-
-board_remove_(Row, Color, [Current | Tail], Piece, Acc, NewBoard) :-
-    my_remove((Row, Column, Color), Current, NewCurrent),
-    my_insert(NewCurrent, Acc, NewAcc),
-    board_remove(Row, Color, Tail, (Row, Column), NewAcc, NewBoard), !.
-
-board_remove_(Row, Color, [Curret | Tail], Piece, Acc, NewBoard) :-
-    board_remove_(Row, Color, Tail, Piece, Acc, NewBoard).
-
-
+board_remove(Row, Color, Board, (Row, Column), NewBoard) :-
+    my_remove((Row, Column, Color), Board, NewBoard).
 
 table_row_ready(Row, Color, Table) :-
     my_member((Row, Pieces, Color), Table),
