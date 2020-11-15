@@ -43,6 +43,10 @@ play_round_([Player|Rest]) :-
     print_player(PlayerNumber),
     play_round_(Rest).
 
+
+% ============================ score area ==========================================
+
+%each player score
 calc_scores :-
     calc_scores_([1,2,3,4]).
 
@@ -50,10 +54,15 @@ calc_scores_([]).
 
 calc_scores_([Player|Rest]) :-
     player(Player, Score, Pieces, Board, Table, Floor),
+    % select full rows
     findall((Row, Color), table_row_ready(Row, Color, Table), Targets),
+    % take the piece from the board
     update_board_and_pieces(Targets, Board, Pieces, NewBoard, NewPieces, SelectedPieces),
+    % reset table
     update_table(Targets, Table, NewTable),
+    % calc score with new pieces
     calc_player_score(SelectedPieces, Board, Pieces, Floor, Score, NewScore),
+    % update player
     retract(player(Player, Score, Pieces, Board, Table, Floor)),
     assert(player(Player, NewScore, NewPices, NewBoard, NewTable, [])).
 
@@ -93,6 +102,10 @@ board_remove(Row, Color, Board, (Row, Column), NewBoard) :-
 table_row_ready(Row, Color, Table) :-
     my_member((Row, Pieces, Color), Table),
     len_count(Pieces, Row).
+
+% ============================================== end score area =====================================================
+
+% ============================================== print area =========================================================
 
 print_no_player :-
     print_factories, nl,
@@ -171,7 +184,8 @@ print_one(X, Y, Color, Pieces) :-
 
 print_one(_, _, _, _) :-
     write(" "), write("   -   "), write(" ").
-    
+
+% ============================================== end print area =====================================================
 
 refill_round :-
     % release previos bag
