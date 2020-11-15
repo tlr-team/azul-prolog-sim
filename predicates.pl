@@ -242,6 +242,29 @@ best_player_move(Fila, Color, Board, Table, Move):-
     middle(Medio),
     best_move(Factorias, Medio, Board, Table, Fila, Color, Move).
 
+
+% seleccionar todas los pares (fila, color) que son jugables.
+all_possible_moves(Table, Board, Moves) :-
+    findall((Row, Color), possible_row_and_color(Row, Color, Table, Board), Moves).
+
+possible_row_and_color(Row, Color, Table, Board) :-
+    playable_row(Row, Table),
+    playable_color(Row, Color, Table, Board).
+
+playable_row(Row, Table) :-
+    my_member((Row, Pieces, Color), Table),
+    not(member_count(Color, Pieces, Row)).
+
+% no hay color seleccionado
+playable_color(Row, Color, Table, Board) :-
+    my_member((Row, _, none), Table),
+    my_member((Row, _, Color), Board), !.
+
+% ya existe un color seleccionado
+playable_color(Row, Color, Table, _) :-
+    my_member((Row, _, Color), Table).
+
+
 % mejorar el select row para que seleccione una fila que se pueda jugar (pueden estar llenas)
 select_row(Row, Table) :-
     %row(L),
