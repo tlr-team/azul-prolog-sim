@@ -172,12 +172,10 @@ sort_players_(Head, [Term | Tail], Result) :-
 
 player_move(PlayerNumber) :-
     player(PlayerNumber, Score, Pieces, Board, Table, Floor),
-    % selected row to play
-    select_row(Fila),
-    % choose row playable color
-    select_row_color(Fila, Color, Table),
+    % selected all playable moves
+    all_possible_moves(Table, Board, Moves),
     % take the best possible move ( it is a factory )
-    best_player_move(Fila, Color, Board, Table, Best_Move),
+    best_player_move(Board, Table, Floor, Moves, Best_Move),
     % plays the selected move
     play_move(PlayerNumber, Color, Row, Best_Move, Resto),
     % change the game logic
@@ -237,10 +235,11 @@ update_middle_piece(PlayerNumber) :-
 
 update_middle_piece(_).
 
-best_player_move(Fila, Color, Board, Table, Move):-
-    factories(Factorias),
-    middle(Medio),
-    best_move(Factorias, Medio, Board, Table, Fila, Color, Move).
+best_player_move(_, _, _, Moves, Factory):-
+    %best_player_move(Board, Table, Floor, Moves, Factory):-
+    %random select a move.
+    %TODO take the best move.
+    random_select((_, _, Factory), Moves, _).
 
 
 % seleccionar todas los pares (fila, color) que son jugables.
