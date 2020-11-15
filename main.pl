@@ -41,7 +41,12 @@ play_round_([Player|Rest]) :-
     player_move(PlayerNumber),
     print_no_player,
     print_player(PlayerNumber),
-    play_round_(Rest).
+    (board_empty, !; play_round_(Rest)).
+    
+
+board_empty :-
+    middle([]),
+    factories([]).
 
 
 % ============================ score area ==========================================
