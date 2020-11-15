@@ -245,11 +245,21 @@ best_player_move(Fila, Color, Board, Table, Move):-
 
 % seleccionar todas los pares (fila, color) que son jugables.
 all_possible_moves(Table, Board, Moves) :-
-    findall((Row, Color), possible_row_and_color(Row, Color, Table, Board), Moves).
+    findall((Row, Color, Factory), possible_row_color_and_factory(Row, Color, Factory, Table, Board), Moves).
 
-possible_row_and_color(Row, Color, Table, Board) :-
+possible_row_color_and_factory(Row, Color, Factory, Table, Board) :-
     playable_row(Row, Table),
-    playable_color(Row, Color, Table, Board).
+    playable_color(Row, Color, Table, Board),
+    playable_factory(Factory, Color).
+
+playable_factory(Factory, Color) :-
+    factories(Factories),
+    my_member(Factory, Factories),
+    my_member(Color, Factory).
+
+playable_factory(Factory, Color),
+    middle(Factory),
+    my_member(Color, Factory).
 
 playable_row(Row, Table) :-
     my_member((Row, Pieces, Color), Table),
