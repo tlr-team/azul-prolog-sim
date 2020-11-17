@@ -175,14 +175,17 @@ full_row((A, List, Col), Table) :-
     not(member_count(Col, List, A)).
     
 
-play_move(PlayerNumber, (Color, Row, Factory), Resto) :-
+play_move(PlayerNumber, (Row, Color, Factory), Resto) :-
     player(PlayerNumber, Score, Pieces, Board, Table, Floor),
     take_color(Factory, Color, Fichas, Resto),
-    write("El jugador "), write(PlayerNumber), write("seleccionó la factoría "), write(Factory),
+    %write("--------------------"),write(Fichas),write(Resto),nl,
+    write("El jugador "), write(PlayerNumber), write("seleccionó la factoría "), write(Factory),nl,
     write("y el color a tomar es "), write(Color), nl,
     insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewFloor),
     retract(player(PlayerNumber, Score, Pieces, Board, Table, Floor)),
     assert(player(PlayerNumber, Score, Pieces, Board, NewTable, NewFloor)).
+    %write("result"),write(NewTable), write(NewFloor),nl.
+    
 
 % read declaration
 insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewFloor) :-
@@ -235,11 +238,11 @@ update_middle_piece(PlayerNumber) :-
 
 update_middle_piece(_).
 
-best_player_move(_, _, _, Moves, Factory):-
+best_player_move(_, _, _, Moves, Choice):-
     %best_player_move(Board, Table, Floor, Moves, Factory):-
     %random select a move.
     %TODO take the best move.
-    random_select((_, _, Factory), Moves, _).
+    random_select(Choice, Moves, _).
 
 
 % seleccionar todas los pares (fila, color) que son jugables.
