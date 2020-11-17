@@ -121,23 +121,13 @@ complete_column_puntuation(_, _, 0).
 take_color(Factory, Color, Pieces, Rest) :-
     take_color_(Factory, Color, Pieces, Rest, [], []).
 
-take_color_([], Color, Pieces, Rest, Pieces, Rest).
+take_color_([], _, Pieces, Rest, Pieces, Rest).
 
 take_color_([A|B], A, Pieces, Rest, PiecesAcc, RestAcc) :-
     take_color_(B, A, Pieces, Rest, [A|PiecesAcc], RestAcc), !.
 
 take_color_([A|B], Color, Pieces, Rest, PiecesAcc, RestAcc) :-
     take_color_(B, Color, Pieces, Rest, PiecesAcc, [A|RestAcc]).
-
-take_all_moves(Factory, Result) :-
-    take_all_moves_(Factory, Result, []).
-
-take_all_moves_([], Result, Result).
-
-take_all_moves_(Factory, Result, Acc) :-
-    my_member(X, Factory),
-    take_color(Factory, X, Pieces, Rest),
-    not(my_member((Pieces, Rest), Acc)),
 
 my_max([], 0).
 
@@ -169,15 +159,15 @@ sort_players_(Head, [Term | Tail], Result) :-
     sort_players_(NHead, Tail, Result).
 
 player_move(PlayerNumber) :-
-    player(PlayerNumber, Score, Pieces, Board, Table, Floor),
+    player(PlayerNumber, _, _, Board, Table, Floor),
     % selected all playable moves
     all_possible_moves(Table, Board, Moves),
     % take the best possible move ( it is a factory )
     best_player_move(Board, Table, Floor, Moves, Best_Move),
     % plays the selected move
-    play_move(PlayerNumber, Color, Row, Best_Move, Resto),
+    play_move(PlayerNumber, Best_Move, Resto),
     % change the game logic
-    update_game(Best_Move, Resto, PlayerNumber). %#TODO añadir el resto de la factoria
+    update_game(Best_Move, Resto). %#TODO añadir el resto de la factoria
 
 % triunfa si (A. List, col) es miembre de table pero no esta completo
 full_row((A, List, Col), Table) :-
@@ -185,37 +175,47 @@ full_row((A, List, Col), Table) :-
     not(member_count(Col, List, A)).
     
 
-play_move(PlayerNumer, Color, Row, (Factory, Place), Resto) :-
-    player(PlayerNumber, Score, _, Board, Table, Floor),
+play_move(PlayerNumber, (Color, Row, Factory), Resto) :-
+    player(PlayerNumber, Score, Pieces, Board, Table, Floor),
     take_color(Factory, Color, Fichas, Resto),
     write("El jugador "), write(PlayerNumber), write("seleccionó la factoría "), write(Factory),
     write("y el color a tomar es "), write(Color), nl,
-    insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewFloor).
+    insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewFloor),
+    retract(player(PlayerNumber, Score, Pieces, Board, Table, Floor)),
+    assert(player(PlayerNumber, Score, Pieces, Board, NewTable, NewFloor)).
 
 % read declaration
-insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, [Resto|Floor]) :-
+insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewFloor) :-
     my_remove((Row, Acc, _), Table, MiddleTable),
     add_pieces(Fichas, Acc, Row, Color, NewAcc, Resto),
-    my_insert((Row, NewAcc, Color), Table, NewTable).
+    my_insert((Row, NewAcc, Color), MiddleTable, NewTable),
+    trasspass(Resto, Floor, NewFloor).
+
+trasspass([], Floor, Floor).
+
+trasspass([A | Tail], Floor, NewFloor) :-
+    my_insert(A, Floor, Intermediate),
+    trasspass(Tail, Intermediate, NewFloor).
 
 
 % fills A Table Row
-add_pieces([], Actuales, Row, Color, Actuales, []).
+add_pieces([], Actuales, _, _, Actuales, []).
 
 add_pieces(Fichas, Actuales, Row, Color, Actuales, Fichas) :-
     member_count(Color, Actuales, Row).
 
 add_pieces([A|B], Actuales, Row, Color, Changed, Rest) :-
-    add_pieces(B, [A|Actuales], Row, Color, Changed, Rest).
+    my_insert(A, Actuales, NewActuales),
+    add_pieces(B, NewActuales, Row, Color, Changed, Rest).
 
-update_game(Factory, Resto, PlayerNumber):-
+update_game(Factory, Resto):-
     factories(Facts),
-    my_remove(Factory, Factories, Result),
-    update_factories(Result, Resto, NResult)
+    my_remove(Factory, Facts, Result),
+    update_factories(Result, Resto, NResult),
     retract(factories(Facts)),
     assert(factories(NResult)), !.
     
-update_game(_, Resto, PlayerNumber) :-
+update_game(_, Resto) :-
     middle(Medio),
     retract(middle(Medio)),
     assert(middle(Resto)).
@@ -256,7 +256,7 @@ playable_factory(Factory, Color) :-
     my_member(Factory, Factories),
     my_member(Color, Factory).
 
-playable_factory(Factory, Color),
+playable_factory(Factory, Color) :-
     middle(Factory),
     my_member(Color, Factory).
 

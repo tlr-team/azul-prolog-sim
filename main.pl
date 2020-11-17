@@ -38,9 +38,9 @@ play_round :-
 play_round_([]).
 
 play_round_([Player|Rest]) :-
-    player_move(PlayerNumber),
+    player_move(Player),
     print_no_player,
-    print_player(PlayerNumber),
+    print_player(Player),
     (board_empty, !; play_round_(Rest)).
     
 
@@ -57,7 +57,7 @@ calc_scores :-
 
 calc_scores_([]).
 
-calc_scores_([Player|Rest]) :-
+calc_scores_([Player|_]) :-
     player(Player, Score, Pieces, Board, Table, Floor),
     % select full rows
     findall((Row, Color), table_row_ready(Row, Color, Table), Targets),
@@ -69,7 +69,7 @@ calc_scores_([Player|Rest]) :-
     calc_player_score(SelectedPieces, Board, Pieces, Floor, Score, NewScore),
     % update player
     retract(player(Player, Score, Pieces, Board, Table, Floor)),
-    assert(player(Player, NewScore, NewPices, NewBoard, NewTable, [])).
+    assert(player(Player, NewScore, NewPieces, NewBoard, NewTable, [])).
 
 calc_player_score([], _, Floor, Score, NewScore) :-
     member_count(Floor, Count),
@@ -86,7 +86,7 @@ calc_player_score([(Row, Column)|Tail], Pieces, Floor, Score, NewScore) :-
 update_table([], Table, Table).
 
 update_table([(Row, Color)|Tail], Table, NewTable) :-
-    my_remove((Row, List, Color), Table),
+    my_remove((Row, _, Color), Table),
     my_insert((Row, [], none), Table, NextTable),
     update_table(Tail, NextTable, NewTable).
 
@@ -98,7 +98,7 @@ update_board_and_pieces_([], Board, Pieces, Board, Pieces, SelectedPieces, Selec
 update_board_and_pieces_([(Row, Color) | Tail], Board, Pieces, NewBoard, NewPieces, SelectedPiecesAcc, SelectedPieces) :-
     board_remove(Row, Color, Board, Piece, NextBoard),
     my_insert(Piece, Pieces, NextPieces),
-    my_insert(Piece, SelectedPiecesAcc, NextSelectedPieces)
+    my_insert(Piece, SelectedPiecesAcc, NextSelectedPieces),
     update_board_and_pieces_(Tail, NextBoard, NextPieces, NewBoard, NewPieces, NextSelectedPieces, SelectedPieces).
 
 board_remove(Row, Color, Board, (Row, Column), NewBoard) :-
@@ -202,11 +202,11 @@ refill_round :-
     %factory list
     factories_number(FN),
     pieces_per_factory(PPF),
-    factory_fill(FN,PPF),
+    factory_fill(FN,PPF).
     %Special piece location.
-    special(Location),
-    retract(special(Location)),
-    assert(special(middle)).
+    % special(Location),
+    % retract(special(Location)),
+    % assert(special(middle)).
 
 game_end :-
     % a player fill an entire row
