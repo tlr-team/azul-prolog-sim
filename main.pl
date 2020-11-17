@@ -41,7 +41,7 @@ play_round_([Player|Rest]) :-
     player_move(Player),
     print_no_player,
     print_player(Player),
-    (board_empty, !; play_round_(Rest)).
+    ((board_empty, !); play_round_(Rest)).
     
 
 board_empty :-

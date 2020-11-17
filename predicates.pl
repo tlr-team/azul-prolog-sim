@@ -247,6 +247,10 @@ all_possible_moves(Table, Board, Moves) :-
     findall((Row, Color, Factory), possible_row_color_and_factory(Row, Color, Factory, Table, Board), Moves).
 
 possible_row_color_and_factory(Row, Color, Factory, Table, Board) :-
+    colors(Colors),
+    my_member(Color, Colors),
+    row(Rows),
+    my_member(Row, Rows),
     playable_row(Row, Table),
     playable_color(Row, Color, Table, Board),
     playable_factory(Factory, Color).
