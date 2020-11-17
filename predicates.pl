@@ -188,6 +188,8 @@ full_row((A, List, Col), Table) :-
 play_move(PlayerNumer, Color, Row, (Factory, Place), Resto) :-
     player(PlayerNumber, Score, _, Board, Table, Floor),
     take_color(Factory, Color, Fichas, Resto),
+    write("El jugador "), write(PlayerNumber), write("seleccionó la factoría "), write(Factory),
+    write("y el color a tomar es "), write(Color), nl,
     insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewFloor).
 
 % read declaration
@@ -206,18 +208,18 @@ add_pieces(Fichas, Actuales, Row, Color, Actuales, Fichas) :-
 add_pieces([A|B], Actuales, Row, Color, Changed, Rest) :-
     add_pieces(B, [A|Actuales], Row, Color, Changed, Rest).
 
-update_game((Factory, factories), Resto, PlayerNumber):-
+update_game(Factory, Resto, PlayerNumber):-
     factories(Facts),
     my_remove(Factory, Factories, Result),
     update_factories(Result, Resto, NResult)
     retract(factories(Facts)),
-    assert(factories(NResult)).
+    assert(factories(NResult)), !.
     
-update_game((Middle, middle), Resto, PlayerNumber) :-
+update_game(_, Resto, PlayerNumber) :-
     middle(Medio),
     retract(middle(Medio)),
-    assert(middle(Resto)),
-    update_middle_piece(PlayerNumber).
+    assert(middle(Resto)).
+    %update_middle_piece(PlayerNumber). % se necesita para el orden de los players en cada ronda
 
 % inserts back the pieces left
 update_factories(Factories, [], Factories).
