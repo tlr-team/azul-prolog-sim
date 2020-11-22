@@ -179,8 +179,8 @@ play_move(PlayerNumber, (Row, Color, Factory), Resto) :-
     player(PlayerNumber, Score, Pieces, Board, Table, Floor),
     take_color(Factory, Color, Fichas, Resto),
     %write("--------------------"),write(Fichas),write(Resto),nl,
-    write("El jugador "), write(PlayerNumber), write("seleccionó la factoría "), write(Factory),nl,
-    write("y el color a tomar es "), write(Color), nl,
+    write("El jugador "), write(PlayerNumber), write(" selecciona la factoria "), write(Factory),nl,
+    write("Selecciona la fila "), write(Row), write(" y toma el color "), write(Color), nl, nl,
     insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewFloor),
     retract(player(PlayerNumber, Score, Pieces, Board, Table, Floor)),
     assert(player(PlayerNumber, Score, Pieces, Board, NewTable, NewFloor)).
@@ -217,11 +217,14 @@ update_game(Factory, Resto):-
     update_factories(Result, Resto, NResult),
     retract(factories(Facts)),
     assert(factories(NResult)), !.
+
+update_game(_, []), !.
     
 update_game(_, Resto) :-
     middle(Medio),
+    my_concat(Resto, Medio, Result)
     retract(middle(Medio)),
-    assert(middle(Resto)).
+    assert(middle(Result)).
     %update_middle_piece(PlayerNumber). % se necesita para el orden de los players en cada ronda
 
 % inserts back the pieces left
