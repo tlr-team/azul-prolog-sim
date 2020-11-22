@@ -232,12 +232,6 @@ update_resto(Resto) :-
     assert(middle(Result)).   
     %update_middle_piece(PlayerNumber). % se necesita para el orden de los players en cada ronda
 
-% inserts back the pieces left
-update_factories(Factories, [], Factories).
-
-update_factories(Factories, Rest, Result) :-
-    my_insert(Rest, Factories, Result).
-
 %moves the special piece
 update_middle_piece(PlayerNumber) :-
     special(middle),

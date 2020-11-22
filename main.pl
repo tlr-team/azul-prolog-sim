@@ -66,13 +66,13 @@ calc_scores_([Player|_]) :-
     % reset table
     update_table(Targets, Table, NewTable),
     % calc score with new pieces
-    calc_player_score(SelectedPieces, Board, Pieces, Floor, Score, NewScore),
+    calc_player_score(SelectedPieces, Pieces, Floor, Score, NewScore),
     % update player
     retract(player(Player, Score, Pieces, Board, Table, Floor)),
     assert(player(Player, NewScore, NewPieces, NewBoard, NewTable, [])).
 
 calc_player_score([], _, Floor, Score, NewScore) :-
-    member_count(Floor, Count),
+    len_count(Floor, Count),
     floor(Count, Value),
     NewScore is Score + Value.
 
@@ -86,8 +86,8 @@ calc_player_score([(Row, Column)|Tail], Pieces, Floor, Score, NewScore) :-
 update_table([], Table, Table).
 
 update_table([(Row, Color)|Tail], Table, NewTable) :-
-    my_remove((Row, _, Color), Table),
-    my_insert((Row, [], none), Table, NextTable),
+    my_remove((Row, _, Color), Table, MiddleTable),
+    my_insert((Row, [], none), MiddleTable, NextTable),
     update_table(Tail, NextTable, NewTable).
 
 update_board_and_pieces(Targets, Board, Pieces, NewBoard, NewPieces, SelectedPieces) :- 
@@ -139,13 +139,13 @@ print_middle :-
 print_player(PlayerNumber):-
     player(PlayerNumber, _, Pieces, _, Table, Floor),
     write("Player "), write(PlayerNumber), nl, nl,
-    print_pieces(Pieces), nl, nl,
-    print_table(Table), nl, nl,
+    print_pieces(Pieces),
+    print_table(Table), nl,
     print_floor(Floor), nl, !.
 
 print_floor(Floor) :-
     len_count(Floor, Pieces),
-    write(" Floor: "), write(Pieces), write(" pieces").
+    write(" Floor: "), write(Pieces), write(" pieces"), nl.
 
 print_table(Table) :-
     my_member((1, Pieces1, Color1), Table),
@@ -166,7 +166,9 @@ print_row(Row, _, none) :-
 print_row(Row, Pieces, _):-
     write(" Row "), write(Row), write(":"),
     print_values(Pieces).
-    
+
+print_pieces([]).
+
 print_pieces(Pieces) :-
     default_board(T),
     print_pieces_(T, Pieces).
