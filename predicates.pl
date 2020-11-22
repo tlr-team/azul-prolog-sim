@@ -222,7 +222,7 @@ update_game(_, []), !.
     
 update_game(_, Resto) :-
     middle(Medio),
-    my_concat(Resto, Medio, Result)
+    my_concat(Resto, Medio, Result),
     retract(middle(Medio)),
     assert(middle(Result)).
     %update_middle_piece(PlayerNumber). % se necesita para el orden de los players en cada ronda
