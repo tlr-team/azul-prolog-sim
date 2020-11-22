@@ -173,7 +173,17 @@ player_move(PlayerNumber) :-
 full_row((A, List, Col), Table) :-
     my_member((A, List, Col), Table),
     not(member_count(Col, List, A)).
-    
+
+play_move(PlayerNumber, (-1, Color, Factory), Resto) :-
+    nogoodmove,
+    retract(nogoodmove),
+    player(PlayerNumber, Score, Pieces, Board, Table, Floor),
+    take_color(Factory, Color, Fichas, Resto),
+    write("El jugador "), write(PlayerNumber), write(" selecciona la factoria "), write(Factory),nl,
+    write("y descarta el color "), write(Color), nl, nl,
+    my_concat(Fichas, Floor, NewFloor),
+    retract(player(PlayerNumber, Score, Pieces, Board, Table, Floor)),
+    assert(player(PlayerNumber, Score, Pieces, Board, Table, NewFloor)),!.
 
 play_move(PlayerNumber, (Row, Color, Factory), Resto) :-
     player(PlayerNumber, Score, Pieces, Board, Table, Floor),
@@ -234,11 +244,23 @@ update_middle_piece(PlayerNumber) :-
 
 update_middle_piece(_).
 
+
+% there is no good move
+best_player_move(_, _, _, [], (-1, Color, Choice)) :-
+    assert(nogoodmove),
+    factories(Factories),
+    middle(Middle),
+    my_insert(Middle,Factories, Concat),
+    random_select(Choice, Concat, _),
+    random_select(Color, Choice, _).
+
 best_player_move(_, _, _, Moves, Choice):-
     %best_player_move(Board, Table, Floor, Moves, Factory):-
     %random select a move.
     %TODO take the best move.
     random_select(Choice, Moves, _).
+
+
 
 
 % seleccionar todas los pares (fila, color) que son jugables.
