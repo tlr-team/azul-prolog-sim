@@ -213,7 +213,6 @@ add_pieces([A|B], Actuales, Row, Color, Changed, Rest) :-
 
 update_game((_,_,Factory), Resto):-
     factories(Facts),
-    write(Factory),nl,
     my_remove(Factory, Facts, Result),
     update_factories(Result, Resto, NResult),
     retract(factories(Facts)),
