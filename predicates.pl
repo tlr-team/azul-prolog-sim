@@ -216,7 +216,7 @@ update_game((_,_,Factory), Resto):-
     my_remove(Factory, Facts, Result),
     update_factories(Result, Resto, NResult),
     retract(factories(Facts)),
-    assert(factories(NResult))!.
+    assert(factories(NResult)),!.
 
 update_game(_, Resto) :-
     middle(Medio),
