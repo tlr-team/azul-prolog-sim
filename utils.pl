@@ -41,6 +41,11 @@ my_count([_|Y], A, R) :-
 my_subllist(L, T) :-
     my_member(X,L),
     my_member(X,T).
+
+my_max(X,Y,X) :-
+    X >= Y.
+
+my_max(_,Y, Y).
     
 print_values([]).
 

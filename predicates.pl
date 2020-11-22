@@ -117,6 +117,27 @@ complete_column_puntuation(Pieces, Column, 7) :-
 
 complete_column_puntuation(_, _, 0).
 
+complete_color_puntuation(Pieces, Result) :-
+    complete_colours(Colors),
+    complete_color_puntuation_(Colors,Pieces, Result, 0).
+
+complete_color_puntuation_([], _, Result, Result).
+
+complete_color_puntuation_([Color | Tail], Pieces, Result, Acc) :-
+    color_puntuation(Color, Pieces, NewScore),
+    NAcc is Acc + NewScore,
+    complete_color_puntuation_(Tail, Pieces, Result, NAcc).
+
+color_puntuation([], _, 10).
+
+color_puntuation([Head | Tail], Pieces, Result) :-
+    my_member(Head, Pieces),
+    color_puntuation(Tail, Pieces, Result), !.
+
+color_puntuation(_, _, 0).
+
+
+
 %take all the pieces of the same type from one factory
 take_color(Factory, Color, Pieces, Rest) :-
     take_color_(Factory, Color, Pieces, Rest, [], []).
@@ -195,7 +216,6 @@ play_move(PlayerNumber, (Row, Color, Factory), Resto) :-
     retract(player(PlayerNumber, Score, Pieces, Board, Table, Floor)),
     assert(player(PlayerNumber, Score, Pieces, Board, NewTable, NewFloor)).
     %write("result"),write(NewTable), write(NewFloor),nl.
-    
 
 % read declaration
 insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewFloor) :-
@@ -297,3 +317,4 @@ playable_color(Row, Color, Table, Board) :-
 % ya existe un color seleccionado
 playable_color(Row, Color, Table, _) :-
     my_member((Row, _, Color), Table).
+

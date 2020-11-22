@@ -5,8 +5,9 @@
 % Prepare board and call main loop
 go :- 
     start_game,
-    play_game.
-    %print_winner. %Todo Print winner player
+    play_game,
+    update_player_scores,
+    print_winner, !.
 
 % check winning condition
 play_game :-
@@ -70,9 +71,11 @@ calc_scores_([Player|Tail]) :-
     update_table(Targets, Table, NewTable),
     % calc score with new pieces
     calc_player_score(SelectedPieces, Pieces, Floor, Score, NewScore),
+    % puntuation >= 0
+    my_max(NewScore, 0, RoundedScore),
     % update player
     retract(player(Player, Score, Pieces, Board, Table, Floor)),
-    assert(player(Player, NewScore, NewPieces, NewBoard, NewTable, [])),
+    assert(player(Player, RoundedScore, NewPieces, NewBoard, NewTable, [])),
     calc_scores_(Tail).
 
 calc_player_score([], _, Floor, Score, NewScore) :-
@@ -115,6 +118,16 @@ table_row_ready(Row, Color, Table) :-
 % ============================================== end score area =====================================================
 
 % ============================================== print area =========================================================
+
+print_winner :-
+    print_winners([1,2,3,4]).
+
+print_winners([]).
+
+print_winners([Player|Tail]) :-
+    player(Player, Score, _, _, _, _),
+    write("El jugador "), write(Player), write(" obtuvo "), write(Score), write(" puntos."),nl,
+    print_winners(Tail).
 
 print_no_player :-
     print_factories, nl,
@@ -232,3 +245,36 @@ completed_some_row(Pieces):-
     completed_row(Pieces, 3);
     completed_row(Pieces, 4);
     completed_row(Pieces, 5).
+
+winner(Player, Score) :-
+    my_member(Player, [1,2,3,4]),
+    player(Player, Score, _, _, _, _),
+    max_score(Score).
+
+max_score(Score) :-
+    my_member(Player, [1,2,3,4]),
+    player(Player, Score2, _, _, _, _),
+    Score >= Score2.
+
+update_player_scores :-
+    update_player_score([1,2,3,4]).
+
+update_player_score([]).
+
+update_player_score([Player| Tail]) :-
+    player(Player, Score, Pieces, Board, Table, Floor),
+    complete_column_puntuation(Pieces, 1, Score1),
+    complete_column_puntuation(Pieces, 2, Score2),
+    complete_column_puntuation(Pieces, 3, Score3),
+    complete_column_puntuation(Pieces, 4, Score4),
+    complete_column_puntuation(Pieces, 5, Score5),
+    complete_row_puntuation(Pieces, 1, Score11),
+    complete_row_puntuation(Pieces, 2, Score22),
+    complete_row_puntuation(Pieces, 3, Score33),
+    complete_row_puntuation(Pieces, 4, Score44),
+    complete_row_puntuation(Pieces, 5, Score55),
+    complete_color_puntuation(Pieces, ScoreC),
+    NewScore is Score + Score1 + Score2 + Score3 + Score4 + Score5 + Score11 + Score22 + Score33 + Score44 + Score55 + ScoreC,
+    retract(player(Player, Score, Pieces, Board, Table, Floor)),
+    assert(player(Player, NewScore, Pieces, Board, Table, Floor)),
+    update_player_score(Tail).
