@@ -167,7 +167,7 @@ player_move(PlayerNumber) :-
     % plays the selected move
     play_move(PlayerNumber, Best_Move, Resto),
     % change the game logic
-    update_game(Best_Move, Resto). %#TODO añadir el resto de la factoria
+    update_game(Best_Move, Resto, PlayerNumber).
 
 % triunfa si (A. List, col) es miembre de table pero no esta completo
 full_row((A, List, Col), Table) :-
@@ -192,14 +192,7 @@ insert_pieces_into_player_table(Fichas, Table, Floor, Color, Row, NewTable, NewF
     my_remove((Row, Acc, _), Table, MiddleTable),
     add_pieces(Fichas, Acc, Row, Color, NewAcc, Resto),
     my_insert((Row, NewAcc, Color), MiddleTable, NewTable),
-    trasspass(Resto, Floor, NewFloor).
-
-trasspass([], Floor, Floor).
-
-trasspass([A | Tail], Floor, NewFloor) :-
-    my_insert(A, Floor, Intermediate),
-    trasspass(Tail, Intermediate, NewFloor).
-
+    my_concat(Resto, Floor, NewFloor).
 
 % fills A Table Row
 add_pieces([], Actuales, _, _, Actuales, []).
@@ -211,17 +204,18 @@ add_pieces([A|B], Actuales, Row, Color, Changed, Rest) :-
     my_insert(A, Actuales, NewActuales),
     add_pieces(B, NewActuales, Row, Color, Changed, Rest).
 
-update_game((_,_,Factory), Resto):-
+update_game((_,_,Factory), Resto, _):-
     factories(Facts),
     my_remove(Factory, Facts, Result),
     update_resto(Resto),
     retract(factories(Facts)),
     assert(factories(Result)),!.
 
-update_game(_, Resto) :-
+update_game(_, Resto, PlayerNumber) :-
     middle(Medio),
     retract(middle(Medio)),
-    assert(middle(Resto)).
+    assert(middle(Resto)),
+    update_middle_piece(PlayerNumber). % se necesita para el orden de los players en cada ronda
 
 update_resto([]).
 
@@ -230,7 +224,7 @@ update_resto(Resto) :-
     my_concat(Resto, Medio, Result),
     retract(middle(Medio)),
     assert(middle(Result)).   
-    %update_middle_piece(PlayerNumber). % se necesita para el orden de los players en cada ronda
+    
 
 %moves the special piece
 update_middle_piece(PlayerNumber) :-

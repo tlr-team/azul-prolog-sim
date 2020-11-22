@@ -60,7 +60,7 @@ calc_scores :-
 
 calc_scores_([]).
 
-calc_scores_([Player|_]) :-
+calc_scores_([Player|Tail]) :-
     player(Player, Score, Pieces, Board, Table, Floor),
     % select full rows
     findall((Row, Color), table_row_ready(Row, Color, Table), Targets),
@@ -72,7 +72,8 @@ calc_scores_([Player|_]) :-
     calc_player_score(SelectedPieces, Pieces, Floor, Score, NewScore),
     % update player
     retract(player(Player, Score, Pieces, Board, Table, Floor)),
-    assert(player(Player, NewScore, NewPieces, NewBoard, NewTable, [])).
+    assert(player(Player, NewScore, NewPieces, NewBoard, NewTable, [])),
+    calc_scores_(Tail).
 
 calc_player_score([], _, Floor, Score, NewScore) :-
     len_count(Floor, Count),
@@ -174,25 +175,25 @@ print_pieces([]).
 
 print_pieces(Pieces) :-
     default_board(T),
-    print_pieces_(T, Pieces).
+    print_pieces_(T, Pieces), nl.
 
 print_pieces_([], _).
 
 print_pieces_([Head|Tail], Pieces) :-
-    print_row_pieces(Head, Pieces), nl,
+    print_one(Head, Pieces),
+    print_new_line(Head),
     print_pieces_(Tail, Pieces).
 
-print_row_pieces([], _).
+print_new_line((_, 5, _)) :-
+    nl,!.
 
-print_row_pieces([(X,Y,Color)|Tail], Pieces) :-
-    print_one(X,Y,Color, Pieces),
-    print_row_pieces(Tail, Pieces).
+print_new_line(_).
 
-print_one(X, Y, Color, Pieces) :-
+print_one((X, Y, Color), Pieces) :-
     my_member((X,Y), Pieces),
     write(" "), write(Color), write(" "), !.
 
-print_one(_, _, _, _) :-
+print_one(_, _) :-
     write(" "), write("   -   "), write(" ").
 
 % ============================================== end print area =====================================================
