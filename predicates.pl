@@ -216,21 +216,12 @@ update_game((_,_,Factory), Resto):-
     my_remove(Factory, Facts, Result),
     update_factories(Result, Resto, NResult),
     retract(factories(Facts)),
-    assert(factories(NResult)), 
-    update_resto(Resto), !.
+    assert(factories(NResult))!.
 
 update_game(_, Resto) :-
     middle(Medio),
     retract(middle(Medio)),
     assert(middle(Resto)).
-
-update_resto([]).
-
-update_resto(Resto) :-
-    middle(Medio),
-    my_concat(Resto, Medio, Result),
-    retract(middle(Medio)),
-    assert(middle(Result)).    
     %update_middle_piece(PlayerNumber). % se necesita para el orden de los players en cada ronda
 
 % inserts back the pieces left
