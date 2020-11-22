@@ -211,20 +211,27 @@ add_pieces([A|B], Actuales, Row, Color, Changed, Rest) :-
     my_insert(A, Actuales, NewActuales),
     add_pieces(B, NewActuales, Row, Color, Changed, Rest).
 
-update_game(Factory, Resto):-
+update_game((_,_,Factory), Resto):-
     factories(Facts),
+    write(Factory),nl,
     my_remove(Factory, Facts, Result),
     update_factories(Result, Resto, NResult),
     retract(factories(Facts)),
-    assert(factories(NResult)), !.
+    assert(factories(NResult)), 
+    update_resto(Resto), !.
 
-update_game(_, []), !.
-    
 update_game(_, Resto) :-
+    middle(Medio),
+    retract(middle(Medio)),
+    assert(middle(Resto)).
+
+update_resto([]).
+
+update_resto(Resto) :-
     middle(Medio),
     my_concat(Resto, Medio, Result),
     retract(middle(Medio)),
-    assert(middle(Result)).
+    assert(middle(Result)).    
     %update_middle_piece(PlayerNumber). % se necesita para el orden de los players en cada ronda
 
 % inserts back the pieces left
