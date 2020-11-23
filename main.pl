@@ -1,6 +1,6 @@
 
-:- [predicates].
-:- [utils].
+:- ['Logic/predicates'].
+:- ['Logic/utils'].
 
 % Prepare board and call main loop
 go :- 
