@@ -1,0 +1,286 @@
+%===================================================================================
+% JORNADA CIENTÍFICA ESTUDIANTIL - MATCOM, UH
+%===================================================================================
+% Esta plantilla ha sido diseñada para ser usada en los artículos de la
+% Jornada Científica Estudiantil, MatCom.
+%
+% Por favor, siga las instrucciones de esta plantilla y rellene en las secciones
+% correspondientes.
+%
+% NOTA: Necesitará el archivo 'jcematcom.sty' en la misma carpeta donde esté este
+%       archivo para poder utilizar esta plantila.
+%===================================================================================
+
+
+
+%===================================================================================
+% PREÁMBULO
+%-----------------------------------------------------------------------------------
+\documentclass[a4paper,10pt,twocolumn]{article}
+
+%===================================================================================
+% Paquetes
+%-----------------------------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{azul}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage[pdftex]{hyperref}
+%-----------------------------------------------------------------------------------
+% Configuración
+%-----------------------------------------------------------------------------------
+\hypersetup{colorlinks,%
+	    citecolor=black,%
+	    filecolor=black,%
+	    linkcolor=black,%
+	    urlcolor=blue}
+
+%===================================================================================
+
+
+
+%===================================================================================
+% Presentacion
+%-----------------------------------------------------------------------------------
+% Título
+%-----------------------------------------------------------------------------------
+\title{Primer Proyecto Programación Declarativa. Curso 2019-2020}
+
+%-----------------------------------------------------------------------------------
+% Autores
+%-----------------------------------------------------------------------------------
+\author{\\
+	\name Leonel Alejandro Garc\'ia L\'opez \email \href{mailto:l.garcia3@estudiantes.matcom.uh.cu}{l.garcia3@estudiantes.matcom.uh.cu}
+	\\ \addr Grupo C412 \AND
+	\name Roberto Marti Cede\~no \email \href{mailto:r.marti@estudiantes.matcom.uh.cu}{r.marti@estudiantes.matcom.uh.cu}
+	\\ \addr Grupo C412
+} 
+
+%-----------------------------------------------------------------------------------
+% Tutores
+%-----------------------------------------------------------------------------------
+\tutors{\\
+	Msc. Dafne García de Armas, \emph{Facultad de Matemática y Computación, Universidad de La Habana}\\
+	Lic. Aimée Alonso Reina, \emph{Facultad de Matemática y Computación, Universidad de La Habana} \\
+	Lic. Fernando, \emph{Facultad de Matemática y Computación, Universidad de La Habana} \\}
+%-----------------------------------------------------------------------------------
+% Headings
+%-----------------------------------------------------------------------------------
+\jcematcomheading{\the\year}{1-\pageref{end}}{Leonel Alejandro Garc\'ia L\'opez, Roberto Marti Cedeño}
+
+%-----------------------------------------------------------------------------------
+\ShortHeadings{Informe de Proyecto}{Leonel Alejandro Garc\'ia L\'opez, Roberto Marti Cedeño}
+%===================================================================================
+
+
+
+%===================================================================================
+% DOCUMENTO
+%-----------------------------------------------------------------------------------
+\begin{document}
+
+%-----------------------------------------------------------------------------------
+% NO BORRAR ESTA LINEA!
+%-----------------------------------------------------------------------------------
+\twocolumn[
+%-----------------------------------------------------------------------------------
+
+\maketitle
+
+%===================================================================================
+% Resumen y Abstract
+%-----------------------------------------------------------------------------------
+\selectlanguage{spanish} % Para producir el documento en Español
+
+%-----------------------------------------------------------------------------------
+% Resumen en Español
+%-----------------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------------
+% English Abstract
+%-----------------------------------------------------------------------------------
+\vspace{0.5cm}
+
+%-----------------------------------------------------------------------------------
+% Palabras clave
+%-----------------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------------
+% Temas
+%-----------------------------------------------------------------------------------
+\begin{topics}
+	Programación Declarativa, Prolog.
+\end{topics}
+
+
+%-----------------------------------------------------------------------------------
+% NO BORRAR ESTAS LINEAS!
+%-----------------------------------------------------------------------------------
+\vspace{0.8cm}
+]
+%-----------------------------------------------------------------------------------
+
+
+%===================================================================================
+
+%===================================================================================
+% Introducción
+%-----------------------------------------------------------------------------------
+\section{Descripción del Juego}
+
+  A continuación daremos una descripción general de todos los elementos que conforman una partida de azul, así como las condiciones y características a tener en cuenta para su implementación.
+%-----------------------------------------------------------------------------------
+
+  \subsection{Componentes Básicas del Juego}
+
+  Azulejos: Son una serie de piezas en cinco colores diferentes. El objetivo de los jugadores será obtener estos azulejos para conseguir conformar el muro que le han asignado.
+  
+  Fábricas: Losetas circulares en las que se colocarán los azulejos en grupos de cuatro al comienzo de cada ronda. La cantidad de fábricas depende de la cantidad de jugadores.
+  
+  El concepto básico es que un jugador, al tomar piezas, siempre deberá tomar todas las de un mismo color que se encuentren en una ubicación concreta. Estas ubicaciones serán las fábricas anteriores o el centro de la mesa, donde se irán colocando las losetas de las fábricas que no sean tomadas por un jugador al capturar las de un color concreto.
+  
+  Ficha de jugador inicial: Determina qué jugador será el primero en escoger en una ronda. Esta ficha, además, funcionará como un azulejo pero que siempre será colocado en la fila de penalización.
+  
+  Tablero Personal: Cada jugador contará con uno y en dicho tablero encontramos los siguientes elementos:
+  
+  \begin{itemize}
+  	\item En la banda superior se encuentra el track de puntuación, con casillas numeradas de 0 a 99.
+  	\item En la zona inferior izquierda encontramos el espacio de preparación. Son cinco filas con un número diferente de columnas cada una (la fila superior solo tiene una posición y cada nueva fila tendrá una columna más hasta llegar a la última fila con cinco columnas).
+  	\item A la derecha encontramos el muro, compuesto por una cuadrícula de cinco filas y cinco columnas. En cada casilla de cada fila encontraremos impreso un tipo de azulejo, de forma que en ninguna fila y en ninguna columna se repite un mismo tipo.
+  	\item Por último, en la fila inferior, encontramos una fila de casillas con un valor negativo que aumenta en una unidad cada dos casilla. En esta fila se irán colocando los azulejos que no se puedan/quieran colocar en alguna de las filas de la zona de preparación.
+  \end{itemize}
+
+\subsection{Preparación de la Partida}	
+
+	\begin{enumerate}
+		\item Cada jugador recibe un tablero personal y un marcador de puntuación que colocará en la casilla de valor 0.
+		
+		\item Se coloca, formando un círculo, un número de losetas de fábrica dependiente del número de jugadores:
+				
+		\subitem 2 Jugadores: 5 Losetas de Fábrica.
+		\subitem	3 Jugadores: 7 Losetas de Fábrica.
+		\subitem	4 Jugadores: 9 Losetas de Fábrica.
+		
+		\item Se introducen en la bolsa los 100 azulejos (20 de cada color) y se mezclan bien.
+		
+		\item 	Se rellena cada loseta de fábrica con 4 piezas extraídas de la bolsa al azar.
+		
+		\item	Se escoge al jugador inicial del partido de forma aleatoria, en las siguientes rondas el jugador inicial, es quien escoja azulejos por primera vez del centro y no de las fábricas, y éste obtendrá la ficha de jugador inicial que debe ponerse en el suelo del tablero, restando puntos.
+	\end{enumerate}
+
+\subsection{Desarrollo de la Partida}
+
+	Una partida de Azul consta de un número indeterminado de rondas hasta que se cumpla la condición de  , que un jugador haya completado una fila completa de su muro.
+	
+	Cada ronda consta a su vez, de tres fases.
+	
+	\subsubsection{Fase I: Selección de Azulejos}
+	
+	Esta fase consta de una serie de turnos alternados entre los jugadores, comenzando por el jugador inicial y continuando en el sentido de las agujas del reloj hasta que finaliza la fase.
+	
+	El turno de un jugador se desarrolla de la siguiente forma:
+	
+	\begin{enumerate}
+		\item 	De forma obligatoria, el jugador debe tomar todos los azulejos de un mismo color de una de las ubicaciones posibles:
+		\subitem Si se toman de una fábrica, los azulejos de otros colores que no se cojan se desplazan al centro de la mesa.
+		\subitem Si se toman del centro de la mesa y es el primer jugador en tomar azulejos de esta zona, el jugador debe tomar, adicionalmente, la ficha de jugador inicial y colocarla en la primera casilla disponible de la fila de suelo. En la siguiente ronda será el jugador inicial en esta fase.
+		\item A continuación, el jugador debe colocar las losetas en alguna de las filas de su zona de preparación cumpliendo las siguientes normas:
+		\subitem Si la fila ya contiene algún azulejo, los nuevos azulejos a colocar deben ser del mismo color.
+		\subitem No se puede colocar azulejos de un tipo concreto en una fila de la zona de preparación si en la fila del muro correspondiente ya se encuentra un azulejo de ese tipo.
+		\subitem Si todos los azulejos no caben en la fila escogida, los sobrantes deben colocarse en la fila de suelo (empezando por la primera casilla libre situada más a la izquierda).
+		\subitem Es posible colocar directamente en la fila de suelo todos los azulejos escogidos en un turno de esta fase.
+		\subitem La fase finaliza tras el turno del jugador que ha tomado el último azulejo en juego, es decir, no quedan azulejos en ninguna fábrica ni en el centro de la mesa.
+	\end{enumerate}
+	
+	\subsubsection{Fase II: Revestir el Muro}
+	
+	Esta fase es automática y se puede desarrollar en paralelo. Cada jugador transporta un azulejo de cada una de las filas completadas al muro, comenzando por la fila superior y continuando hacia abajo. Por cada azulejo colocado en el muro se anotan puntos en función de los azulejos directamente conectados en la fila y/o columna correspondiente:
+	
+	\begin{itemize}
+		\item Si el azulejo no se coloca adyacente a ningún otro azulejo de forma ortogonal, se anotará 1 punto.
+		\item Si el azulejo se coloca adyacente al menos un azulejo, se cuentan cuántos azulejos directamente conectados en línea recta en la fila y/o columna hay. Por cada azulejo en cada una de ambas rectas se anota un punto, incluyendo al azulejo recién colocado. Por ejemplo, si el azulejo colocado tiene 1 azulejo adyacente en la columna y 1 azulejo adyacente en la fila, el jugador anotó 4 puntos (2 azulejos en la fila y 2 azulejos en la columna).
+		\item El resto de azulejos de cada fila completada se colocan en la tapa de la caja (visibles para todos los jugadores).
+		\item Los azulejos que se encuentran en filas incompletas, permanecen en su posición para la siguiente ronda.
+		\item 	Por último, los jugadores restan puntos según las losetas que se encuentran en su fila de suelo, retrasando su marcador tantos puntos como indique cada casilla ocupada.
+	\end{itemize}
+
+	La fase finaliza una vez todos los jugadores han anotado sus puntos.
+	
+	\subsubsection{Fase III: Mantenimiento}
+	
+	Si la partida no ha finalizado, se prepara la siguiente ronda, volviendo a sacar de la bolsa 4 azulejos por fábrica. Si la bolsa quedase vacía, en ese momento se re-introducirán todos los azulejos que se encuentran en la tapa de la caja a la bolsa y se continuaría reponiendo.
+	
+	Puede darse el caso de que, aún reintroduciendo los azulejos de la caja no haya azulejos suficientes para reponer todas las fábricas. En este caso se repondrá hasta donde fuese posible.
+	
+	\subsection{Fin de la Partida}
+	
+	La partida termina en la ronda en la que un jugador consigue completar una o más filas. A los puntos acumulados se suman los siguientes:
+	
+	\begin{itemize}
+		\item 10 Puntos por cada color de azulejo que se haya completado (se tiene un azulejo de ese color en cada fila)
+		\item 7 Puntos por cada columna completa
+		\item 2 Puntos por cada fila completa.
+	\end{itemize}
+
+	El jugador con más puntos se proclama vencedor. En caso de empate, el jugador con más filas completadas será el ganador. Si la igualdad permanece, se comparte la victoria.
+
+	
+	\section{Solución Propuesta}
+	
+	La solución propuesta se realizó en el lenguaje PROLOG y para su realización se tuvieron en cuentas buenas prácticas de la programación funcional, en especial las relacionadas con el lenguaje.
+	
+	La carpeta de solución sigue la siguiente estructura. En la raíz se encuentra el archivo $main.pl$ donde se encapsulan los predicados principales del funcionamiento de la solución. En la carpeta $logic$ se encuentran los archivos $predicates.pl$ que contiene todas las instrucciones, $utils.pl$ que contiene predicados tomados  de clase práctica y $static.pl$ que contiene los predicados estáticos.
+	
+	Para una correcta ejecución de la solución basta con que se importe el archivo $main.pl$ y se ejecute el predicado $go.$
+	
+	\subsection{Estructuras de Datos}
+	
+	Para la solución del problema propuesto se emplearon varios predicados, tanto estáticos como dinámicos que sirvieron para darle seguimiento al estado del tablero en cada instante de juego. 
+	
+	\begin{itemize}
+		\item Una ficha de juego se representa por su color correspondiente $C_i$, por lo cual hacemos referencia indistintamente entre colores y fichas.
+		\item Una factoría $F_1$ no es mas que una selección de colores $C_1, C_2, .. C_n$, $n <= 4$ agrupados en una lista.
+		\item $factories([F_1, F_2, .. F_i])$, $n <= 9$ representa una lista con cada una de las factorías que se encuentran presentes en un momento dado del juego.
+		\item $middle([C_1, C_2, C_n])$ representa todas las fichas, representadas por su color que han sido descartadas hasta el momento dado sobre la mesa.
+		\item $special(K)$, $K$ pertenece al conjunto $[middle, 1, 2, 3, 4]$ representa la ubicación actual de la ficha especial. Siendo 1, 2, 3, 4 los identificadores de los jugadores.
+		\item $bag([C_1, C_2, .., C_n])$ representa la bolsa de la cual se toman las fichas $C_1, C_2, C_n$ del juego.
+		\item $player(i, S_i, P_i, B_i, T_i, F_i)$, $i$ pertenece al conjunto $[1,2,3,4]$, representa cada uno de los jugadores.
+	\end{itemize} 
+
+	\subsection{Los jugadores}
+	Como definimos anteriormente, cada jugador se representa por el predicado $player(i, S_i, P_i, B_i, T_i, F_i)$.
+	
+	$S_i$ representa en cada momento de juego la puntuación que posee el jugador. $P_i$ no es mas que un listado de todas las fichas $(x,y)$ que posee el jugador en su muro. 
+	
+	$B_i$ es una estructura especial que se definió para cada jugador que lleva constancia de todas las fichas que faltan por tomar del muro del jugador. En vez de insertar en el muro ficha a ficha, se llevó esta estructura que posibilitó entre varios beneficios el de saber en cada momento que color faltaba por insertar en que fila del muro del jugador. Para rellenar el muro del jugador se toma una ficha de su $B_i$ y se coloca en $P_i$. Es importante destacar que las fichas representadas en $B_i$ siguen el formato $(fila, columna, color)$, mientras que en $P_i$ siguen el formato $(fila, columna)$.
+	
+	$T_i$ representa el espacio de preparación del jugador $i$, y por convenio sigue una estructura fija. $T_i$ esta compuesto por ternas $(fila, piezas, color)$. El número de fila además de delimitar a que fila del espacio de preparación del jugador se hace referencia, también sirve como límite de la cantidad de piezas que puede contener la misma. El color puede ser $none$, o bien cualquiera de los colores del juego. Y las piezas o son una lista vacía o todas son del mismo color definido en su terna y no superan el número de la fila.
+	
+	$F_i$ representa el suelo de cada jugador, donde se almacenan las fichas sobrantes de insertar en la parte de preparación. Para la implementación propuesta se representa mediante una lista de fichas, que se toman en cuenta a la hora de calcular la puntuación de cada jugador. 
+	
+	\subsection{Predicados estáticos}
+	
+	Los predicados estáticos se pueden encontrar el en archivo $static.pl$ dentro de la carpeta $Logic$ del proyecto. Estos predicados definen entre otras cosas los valores fijos o por defecto de muchas de las operaciones del juego. También sirven de base para predicados mas complejos.
+	
+	Entre los predicados que definen valores por defecto podemos encontrar a $default\_bag/1$, $default\_board/1$, $default\_table/1$ que definen las inicializaciones de la bolsa del juego, la estructura auxiliar paralela al muro y la tabla de preparación respectivamente. $factories\_number/1$ y $pieces\_per\_factory/1$ definen la cantidad de factorías y de piezas por factoría del juego.
+	
+	Especial atención requiere el predicado $connected/2$ que dado dos puntos $(x_1, y_1)$ y $(x_2,y_2)$ triunfa si y solo si están conectados en un muro completo. Este predicado permite el cálculo de la puntuación resultante de insertar una pieza nueva en el muro del jugador.
+	
+	El predicado $floor/2$ define la forma de calcular dado una cantidad de fichas en el suelo de un jugador cuanta puntuación pierde. Finalmente $complete\_colours/1$ define el listado por filas de todas las fichas que conforman un color determinado.
+	
+	\subsection{Estrategia de selección de fichas}
+	
+	La estrategia seguida de selección de fichas es aleatoria para cada jugador, pero se sigue el siguiente convenio. Primero se intenta tomar una jugada aleatoria del conjunto de todas las jugadas factibles de un jugador. Defínase jugada factible como jugada que lleva a la inclusión de al menos 1 ficha en su zona de preparación y que por consiguiente lleva al final del juego. Si no encuentra jugada factible entonces se toma una jugada al azar y se descartan todas las fichas.
+	
+
+%===================================================================================
+
+\label{end}
+
+\end{document}
+
+
+
+%===================================================================================
